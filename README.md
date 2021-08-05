@@ -1,1 +1,1 @@
-# Nginx-Consul-Plateform
+# Nginx-Consul-Platform
