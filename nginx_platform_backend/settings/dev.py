@@ -180,7 +180,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             # 日志位置,日志文件名,日志保存目录必须手动创建，注：这里的文件路径要注意BASE_DIR代表的是小luffyapi
-            'filename': os.path.join(os.path.dirname(BASE_DIR), "logs", "luffy.log"),
+            'filename': os.path.join(os.path.dirname(BASE_DIR), "logs", "ops.log"),
             # 日志文件的最大值,这里我们设置300M
             'maxBytes': 300 * 1024 * 1024,
             # 日志文件的数量,设置最大日志数量为10
