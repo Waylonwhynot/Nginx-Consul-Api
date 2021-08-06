@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Menu
+from .models import Menu,UserProfile,Permission,Role,Organization
 import json
 
 #子菜单序列化类
@@ -19,4 +19,28 @@ class MenuListSerializer(serializers.ModelSerializer):
         children_queryset = Menu.objects.filter(pid=obj.id)
         children_list = MenuChildSerializer(children_queryset,many=True).data
         return children_list
+
+# 组织
+class OrgListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = '__all__'
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = '__all__'
+
+
+
 
