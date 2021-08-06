@@ -45,7 +45,8 @@ class PermissionChildSerializer(serializers.ModelSerializer):
 
 class PermissionSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(source='get_children')
-
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
     class Meta:
         model = Permission
         fields = ["id", "name","method", "change_user","create_time","update_time","pid", "children"]
