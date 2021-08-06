@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/../Luffy/luffy_api/.idea/luffy_api.iml" filepath="$PROJECT_DIR$/../Luffy/luffy_api/.idea/luffy_api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/nginx_platform_backend.iml" filepath="$PROJECT_DIR$/.idea/nginx_platform_backend.iml" />
-    </modules>
-  </component>
-</project>
