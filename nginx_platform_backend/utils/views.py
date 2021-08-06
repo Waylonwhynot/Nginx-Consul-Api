@@ -26,15 +26,15 @@ class CommonView(GenericViewSet, ListModelMixin):
 class CommonModelViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         res = super(CommonModelViewSet, self).create(request, *args, **kwargs)
-        return APIResponse(result=res.data)
+        return APIResponse(data=res.data)
 
     def retrieve(self, request, *args, **kwargs):
         res = super(CommonModelViewSet, self).create(request, *args, **kwargs)
-        return APIResponse(result=res.data)
+        return APIResponse(data=res.data)
 
     def update(self, request, *args, **kwargs):
         res = super(CommonModelViewSet, self).update(request, *args, **kwargs)
-        return APIResponse(result=res.data)
+        return APIResponse(data=res.data)
 
     def destroy(self, request, *args, **kwargs):
         res = super(CommonModelViewSet, self).destroy(request, *args, **kwargs)
@@ -42,4 +42,4 @@ class CommonModelViewSet(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         res = super(CommonModelViewSet, self).list(request, *args, **kwargs)
-        return APIResponse(result=res.data)
+        return APIResponse(data=res.data)

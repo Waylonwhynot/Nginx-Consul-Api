@@ -9,7 +9,7 @@ from . import models
 from .serializer import NginxConfSerializer
 
 class NginxConfigViewSet(CommonModelViewSet):
-    queryset = models.NginxConf.objects.all()
+    queryset = models.NginxConf.objects.filter(status='running').order_by('-id')
     serializer_class = NginxConfSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'appid']
