@@ -19,3 +19,130 @@ INFO 2021-08-05 16:55:15,135 autoreload 203 /Users/waylonyan/PycharmProjects/ngi
 INFO 2021-08-05 16:55:15,558 autoreload 578 Watching for file changes with StatReloader
 INFO 2021-08-05 16:55:24,833 autoreload 203 /Users/waylonyan/PycharmProjects/nginx_platform_backend/nginx_platform_backend/settings/dev.py changed, reloading.
 INFO 2021-08-05 16:55:25,211 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-05 18:40:48,798 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-05 18:41:08,504 autoreload 203 /Users/waylonyan/PycharmProjects/nginx_platform_backend/nginx_platform_backend/settings/dev.py changed, reloading.
+INFO 2021-08-05 18:41:09,018 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-05 18:41:16,657 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-05 21:00:52,621 autoreload 203 /Users/waylonyan/PycharmProjects/nginx_platform_backend/nginx_platform_backend/settings/dev.py changed, reloading.
+INFO 2021-08-05 21:00:53,459 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-05 21:01:47,517 autoreload 203 /Users/waylonyan/PycharmProjects/nginx_platform_backend/nginx_platform_backend/settings/dev.py changed, reloading.
+INFO 2021-08-05 21:01:47,990 autoreload 578 Watching for file changes with StatReloader
+WARNING 2021-08-05 21:59:24,668 log 228 Not Found: /
+WARNING 2021-08-05 21:59:24,669 basehttp 154 "GET / HTTP/1.1" 404 2062
+WARNING 2021-08-05 21:59:25,124 log 228 Not Found: /favicon.ico
+WARNING 2021-08-05 21:59:25,125 basehttp 154 "GET /favicon.ico HTTP/1.1" 404 2113
+ERROR 2021-08-05 21:59:31,921 log 228 Internal Server Error: /admin/
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/sessions/backends/base.py", line 189, in _get_session
+    return self._session_cache
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 71, in execute
+    return self.cursor.execute(query, args)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/cursors.py", line 148, in execute
+    result = self._query(query)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/cursors.py", line 310, in _query
+    conn.query(q)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 775, in _read_query_result
+    result.read()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1146, "Table 'nginx_consul.django_session' doesn't exist")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/core/handlers/base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/core/handlers/base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/admin/sites.py", line 241, in wrapper
+    return self.admin_view(view, cacheable)(*args, **kwargs)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/utils/decorators.py", line 142, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/views/decorators/cache.py", line 44, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/admin/sites.py", line 212, in inner
+    if not self.has_permission(request):
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/admin/sites.py", line 186, in has_permission
+    return request.user.is_active and request.user.is_staff
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/utils/functional.py", line 256, in inner
+    self._setup()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/utils/functional.py", line 392, in _setup
+    self._wrapped = self._setupfunc()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/auth/middleware.py", line 24, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/auth/middleware.py", line 12, in get_user
+    request._cached_user = auth.get_user(request)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/auth/__init__.py", line 182, in get_user
+    user_id = _get_user_session_key(request)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/auth/__init__.py", line 59, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/sessions/backends/base.py", line 54, in __getitem__
+    return self._session[key]
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/sessions/backends/base.py", line 194, in _get_session
+    self._session_cache = self.load()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/sessions/backends/db.py", line 43, in load
+    s = self._get_session_from_db()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    expire_date__gt=timezone.now()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/query.py", line 402, in get
+    num = len(clone)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/query.py", line 256, in __len__
+    self._fetch_all()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/query.py", line 1242, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/query.py", line 55, in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/models/sql/compiler.py", line 1097, in execute_sql
+    cursor.execute(sql, params)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 99, in execute
+    return super().execute(sql, params)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 67, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 76, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 71, in execute
+    return self.cursor.execute(query, args)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/cursors.py", line 148, in execute
+    result = self._query(query)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/cursors.py", line 310, in _query
+    conn.query(q)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 775, in _read_query_result
+    result.read()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/opt/anaconda3/envs/luffy-test/lib/python3.6/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+django.db.utils.ProgrammingError: (1146, "Table 'nginx_consul.django_session' doesn't exist")
+ERROR 2021-08-05 21:59:31,924 basehttp 154 "GET /admin/ HTTP/1.1" 500 268494
+INFO 2021-08-06 11:34:21,121 autoreload 578 Watching for file changes with StatReloader

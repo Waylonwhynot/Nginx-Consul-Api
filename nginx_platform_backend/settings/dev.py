@@ -85,15 +85,15 @@ WSGI_APPLICATION = 'nginx_platform_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-password = os.environ.get('password', '12345678')
+password = os.environ.get('password', 'Admin@123')
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nginx_backend',
-        'USER': 'yan',
+        'NAME': 'nginx_consul',
+        'USER': 'nginx',
         'PASSWORD': password,
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.11.251',
         'PORT': 3306
     }
 }
