@@ -54,6 +54,9 @@ class Role(CbaseModel):
         verbose_name = '角色'
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
+
 
 class Organization(CbaseModel):
     """

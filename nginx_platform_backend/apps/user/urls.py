@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.static import serve
 from django.conf import settings
+from . import views
+from rest_framework.routers import SimpleRouter
 
+router = SimpleRouter()
+router.register('menu/search', views.MenuListView, 'MenuListView')
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/system/', include('user.urls')),
-    # media文件路径开放
-    re_path('^media/(?P<path>.*)', serve, {'document_root':settings.MEDIA_ROOT})
+    path('', include(router.urls)),
 ]
