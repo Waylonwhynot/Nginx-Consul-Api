@@ -147,3 +147,67 @@ django.db.utils.ProgrammingError: (1146, "Table 'nginx_consul.django_session' do
 ERROR 2021-08-05 21:59:31,924 basehttp 154 "GET /admin/ HTTP/1.1" 500 268494
 INFO 2021-08-06 11:34:21,121 autoreload 578 Watching for file changes with StatReloader
 INFO 2021-08-06 11:41:34,124 autoreload 584 Watching for file changes with StatReloader
+INFO 2021-08-06 12:01:50,839 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-06 12:05:12,902 autoreload 578 Watching for file changes with StatReloader
+WARNING 2021-08-06 12:05:14,655 log 228 Not Found: /
+WARNING 2021-08-06 12:05:14,655 basehttp 154 "GET / HTTP/1.1" 404 2062
+WARNING 2021-08-06 12:05:15,064 log 228 Not Found: /favicon.ico
+WARNING 2021-08-06 12:05:15,064 basehttp 154 "GET /favicon.ico HTTP/1.1" 404 2113
+INFO 2021-08-06 12:05:19,365 basehttp 154 "GET /admin/ HTTP/1.1" 302 0
+INFO 2021-08-06 12:05:19,388 basehttp 154 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4092
+INFO 2021-08-06 12:05:19,451 basehttp 154 "GET /static/admin/simpleui-x/js/login.js?_=3.3 HTTP/1.1" 200 669
+INFO 2021-08-06 12:05:19,451 basehttp 154 "GET /static/admin/simpleui-x/css/login.css?_=2.1 HTTP/1.1" 200 500
+INFO 2021-08-06 12:05:19,454 basehttp 154 "GET /static/admin/simpleui-x/fontawesome-free-5.8.1-web/css/all.min.css HTTP/1.1" 200 55111
+INFO 2021-08-06 12:05:19,455 basehttp 154 "GET /static/admin/simpleui-x/js/vue.min.js?_=2021.8.1 HTTP/1.1" 200 93675
+INFO 2021-08-06 12:05:19,456 basehttp 154 "GET /static/admin/simpleui-x/elementui/theme-chalk/index.css HTTP/1.1" 200 232478
+INFO 2021-08-06 12:05:19,458 basehttp 154 "GET /static/admin/simpleui-x/elementui/index.js?_=2021.8.1 HTTP/1.1" 200 567853
+INFO 2021-08-06 12:05:19,465 basehttp 154 "GET /static/admin/simpleui-x/particles/app.js HTTP/1.1" 200 3728
+INFO 2021-08-06 12:05:19,468 basehttp 154 "GET /static/admin/simpleui-x/particles/particles.js HTTP/1.1" 200 51264
+INFO 2021-08-06 12:05:19,468 basehttp 154 "GET /static/admin/simpleui-x/img/logo.png HTTP/1.1" 200 115997
+INFO 2021-08-06 12:05:19,485 basehttp 154 "GET /static/admin/simpleui-x/img/bg.svg HTTP/1.1" 200 9547
+INFO 2021-08-06 12:05:19,685 basehttp 154 "GET /static/admin/simpleui-x/fontawesome-free-5.8.1-web/webfonts/fa-solid-900.woff2 HTTP/1.1" 200 74256
+INFO 2021-08-06 12:05:24,855 basehttp 154 "GET /static/admin/simpleui-x/elementui/theme-chalk/fonts/element-icons.woff HTTP/1.1" 200 28200
+INFO 2021-08-06 12:05:28,143 basehttp 154 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2021-08-06 12:05:28,215 basehttp 154 "GET /admin/ HTTP/1.1" 200 18664
+INFO 2021-08-06 12:05:28,289 basehttp 154 "GET /static/admin/simpleui-x/waves/waves.min.css?_=2.1 HTTP/1.1" 200 3861
+INFO 2021-08-06 12:05:28,291 basehttp 154 "GET /static/admin/simpleui-x/automatic/dicts.js?_=2021.8.1 HTTP/1.1" 200 6292
+INFO 2021-08-06 12:05:28,292 basehttp 154 "GET /static/admin/simpleui-x/locale/en-us.js?_=2021.8.1 HTTP/1.1" 200 811
+INFO 2021-08-06 12:05:28,292 basehttp 154 "GET /static/admin/simpleui-x/automatic/segment.js?_=2021.8.1 HTTP/1.1" 200 1186
+INFO 2021-08-06 12:05:28,293 basehttp 154 "GET /static/admin/simpleui-x/locale/zh-hans.js?_=2021.8.1 HTTP/1.1" 200 1254
+INFO 2021-08-06 12:05:28,293 basehttp 154 "GET /static/admin/simpleui-x/css/index.css?_=3.2 HTTP/1.1" 200 6608
+INFO 2021-08-06 12:05:28,304 basehttp 154 "GET /static/admin/simpleui-x/js/cookie.js?_=2021.8.1 HTTP/1.1" 200 524
+INFO 2021-08-06 12:05:28,312 basehttp 154 "GET /static/admin/simpleui-x/theme/theme.js?_=2021.8.1 HTTP/1.1" 200 4274
+INFO 2021-08-06 12:05:28,312 basehttp 154 "GET /static/admin/simpleui-x/waves/waves.min.js?_=2021.8.1 HTTP/1.1" 200 6329
+INFO 2021-08-06 12:05:28,313 basehttp 154 "GET /static/admin/simpleui-x/js/index.js?_=2021.8.1 HTTP/1.1" 200 20820
+INFO 2021-08-06 12:05:28,313 basehttp 154 "GET /static/admin/simpleui-x/js/menu.js?_=2021.8.1 HTTP/1.1" 200 1189
+INFO 2021-08-06 12:05:28,528 basehttp 154 "GET /static/admin/simpleui-x/fontawesome-free-5.8.1-web/webfonts/fa-regular-400.woff2 HTTP/1.1" 200 13552
+INFO 2021-08-06 12:05:28,530 basehttp 154 "GET /static/admin/simpleui-x/fontawesome-free-5.8.1-web/webfonts/fa-brands-400.woff2 HTTP/1.1" 200 74768
+INFO 2021-08-06 12:05:34,269 basehttp 154 "GET /admin/user/organization/ HTTP/1.1" 200 24635
+INFO 2021-08-06 12:05:34,303 basehttp 154 "GET /static/admin/simpleui-x/css/base.css?_=2.7 HTTP/1.1" 200 3401
+INFO 2021-08-06 12:05:34,303 basehttp 154 "GET /static/admin/css/base.css?_=2.7 HTTP/1.1" 200 16378
+INFO 2021-08-06 12:05:34,305 basehttp 154 "GET /static/admin/simpleui-x/theme/simpleui.css HTTP/1.1" 200 4270
+INFO 2021-08-06 12:05:34,313 basehttp 154 "GET /static/admin/simpleui-x/js/language.js?_=2.1.2 HTTP/1.1" 200 189
+INFO 2021-08-06 12:05:34,315 basehttp 154 "GET /static/admin/simpleui-x/locale/en-us.js?_=2.1.2 HTTP/1.1" 200 811
+INFO 2021-08-06 12:05:34,316 basehttp 154 "GET /static/admin/simpleui-x/locale/zh-hans.js HTTP/1.1" 200 1254
+INFO 2021-08-06 12:05:34,333 basehttp 154 "GET /static/admin/simpleui-x/js/cookie.js HTTP/1.1" 200 524
+INFO 2021-08-06 12:05:34,334 basehttp 154 "GET /static/admin/css/changelists.css?_=20180905 HTTP/1.1" 200 6170
+INFO 2021-08-06 12:05:34,337 basehttp 154 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 363
+INFO 2021-08-06 12:05:34,341 basehttp 154 "GET /static/admin/css/responsive.css?_=20180905 HTTP/1.1" 200 17944
+INFO 2021-08-06 12:05:34,347 basehttp 154 "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+INFO 2021-08-06 12:05:34,356 basehttp 154 "GET /static/admin/js/core.js HTTP/1.1" 200 7135
+INFO 2021-08-06 12:05:34,356 basehttp 154 "GET /admin/jsi18n/ HTTP/1.1" 200 7722
+INFO 2021-08-06 12:05:34,357 basehttp 154 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 6918
+INFO 2021-08-06 12:05:34,360 basehttp 154 "GET /static/admin/js/actions.js HTTP/1.1" 200 6538
+INFO 2021-08-06 12:05:34,365 basehttp 154 "GET /static/admin/js/urlify.js HTTP/1.1" 200 8972
+INFO 2021-08-06 12:05:34,373 basehttp 154 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 271751
+INFO 2021-08-06 12:05:34,374 basehttp 154 "GET /static/admin/simpleui-x/automatic/segment.js HTTP/1.1" 200 1186
+INFO 2021-08-06 12:05:34,378 basehttp 154 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1530
+INFO 2021-08-06 12:05:34,380 basehttp 154 "GET /static/admin/simpleui-x/automatic/dicts.js HTTP/1.1" 200 6292
+INFO 2021-08-06 12:05:34,382 basehttp 154 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 128820
+INFO 2021-08-06 12:05:34,384 basehttp 154 "GET /static/admin/simpleui-x/js/axios.min.js HTTP/1.1" 200 14237
+INFO 2021-08-06 12:05:34,385 basehttp 154 "GET /static/admin/js/vendor/jquery/jquery.min.js HTTP/1.1" 200 86927
+INFO 2021-08-06 12:05:34,489 basehttp 154 "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+INFO 2021-08-06 12:05:34,517 basehttp 154 "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 86184
+INFO 2021-08-06 12:06:25,627 autoreload 203 /Users/dgt/Desktop/Python学习/Project/Nginx-Consul-Platform/nginx_platform_backend/apps/user/models.py changed, reloading.
+INFO 2021-08-06 12:06:26,332 autoreload 578 Watching for file changes with StatReloader
+INFO 2021-08-06 12:06:26,852 basehttp 154 "GET /admin/ HTTP/1.1" 200 18678

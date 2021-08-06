@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'user'
 ]
 
 MIDDLEWARE = [
@@ -146,6 +147,7 @@ MEDIA_URL = '/media/'
 
 # 扩展user表
 # AUTH_USER_MODEL = 'user.user'
+AUTH_USER_MODEL = 'user.UserProfile'
 
 
 # 真实项目上线后，日志文件打印级别不能过低，因为一次日志记录就是一次文件io操作
