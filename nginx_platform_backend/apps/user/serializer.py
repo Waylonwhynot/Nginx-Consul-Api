@@ -20,6 +20,8 @@ class MenuListSerializer(serializers.ModelSerializer):
         children_list = MenuChildSerializer(children_queryset,many=True).data
         return children_list
 
+
+
 # 组织
 class OrgListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,10 +38,24 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = '__all__'
 
-class PermissionSerializer(serializers.ModelSerializer):
+class PermissionChildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
         fields = '__all__'
+
+class PermissionSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField(source='get_children')
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
+    class Meta:
+        model = Permission
+        fields = ["id", "name","method", "change_user","create_time","update_time","pid", "children"]
+
+    # 获取子菜单
+    def get_children(self, obj):
+        children_queryset = Permission.objects.filter(pid=obj.id)
+        children_list = PermissionChildSerializer(children_queryset, many=True).data
+        return children_list
 
 
 
