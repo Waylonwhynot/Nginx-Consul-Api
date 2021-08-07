@@ -29,7 +29,7 @@ class CommonModelViewSet(ModelViewSet):
         return APIResponse(data=res.data)
 
     def retrieve(self, request, *args, **kwargs):
-        res = super(CommonModelViewSet, self).create(request, *args, **kwargs)
+        res = super(CommonModelViewSet, self).retrieve(request, *args, **kwargs)
         return APIResponse(data=res.data)
 
     def update(self, request, *args, **kwargs):
