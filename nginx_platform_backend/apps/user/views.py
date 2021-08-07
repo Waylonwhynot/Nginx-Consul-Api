@@ -39,5 +39,11 @@ class PermissionView(GenericViewSet,MyListModelMixin):
     queryset = models.Permission.objects.all()
     serializer_class = PermissionSerializer
 
-class UserView(ModelViewSet):
-    ...
+class UserView(CommonModelViewSet):
+    queryset = models.UserProfile.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    # filter_backends = [SearchFilter,DjangoFilterBackend,OrderingFilter]
+    search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
+
+

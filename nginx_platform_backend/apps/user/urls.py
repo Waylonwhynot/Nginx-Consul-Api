@@ -22,7 +22,7 @@ from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
 router.register('menu', views.MenuListView, 'MenuListView')
-router.register('user', views.UserListView, 'UserListView')
+router.register('user', views.UserView, 'UserListView')
 router.register('permission', views.PermissionView, 'PermissionView')
 router.register('role', views.RoleView ,'RoleListView')
 router.register('org', views.OrganizationView, 'OrgListView')

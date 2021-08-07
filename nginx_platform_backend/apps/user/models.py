@@ -83,8 +83,8 @@ class UserProfile(AbstractUser, CbaseModel):
     name = models.CharField(max_length=150, default="", verbose_name="姓名")
     mobile = models.CharField(max_length=11, default="", verbose_name="手机号码", blank=True, null=True)
     email = models.EmailField(max_length=50, verbose_name="邮箱")
-    image = models.ImageField(upload_to="image/%Y/%m", default="image/default.png",
-                              max_length=100, null=True, blank=True)
+    # image = models.ImageField(upload_to="image/%Y/%m", default="image/default.png",
+    #                           max_length=100, null=True, blank=True)
     department = models.ForeignKey("Organization", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="部门")
     position = models.CharField(max_length=50, null=True, blank=True, verbose_name="职位")
     superior = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="上级主管")
