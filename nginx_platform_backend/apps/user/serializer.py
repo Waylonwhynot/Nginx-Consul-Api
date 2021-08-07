@@ -24,6 +24,8 @@ class MenuListSerializer(serializers.ModelSerializer):
 
 # 组织
 class OrgListSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
     class Meta:
         model = Organization
         fields = '__all__'
