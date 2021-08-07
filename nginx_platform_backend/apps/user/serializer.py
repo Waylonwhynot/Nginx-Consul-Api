@@ -37,6 +37,7 @@ class OrgListSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
+    department_name = serializers.ReadOnlyField(source="department.name")
     class Meta:
         model = UserProfile
         fields = '__all__'
