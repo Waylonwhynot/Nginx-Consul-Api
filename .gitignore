@@ -2,6 +2,6 @@
 __pycache__
 /script
 *.pyc
-/logs/*.log
+*.log
 celerybeat-schedule.db
 celerybeat-schedule
