@@ -21,11 +21,12 @@ from . import views
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
-router.register('menu', views.MenuListView, 'MenuListView')
+router.register('menu', views.MenuView, 'MenuView')
 router.register('user', views.UserView, 'UserListView')
 router.register('permission', views.PermissionView, 'PermissionView')
-router.register('role', views.RoleView ,'RoleListView')
-router.register('org', views.OrganizationView, 'OrgListView')
+router.register('role', views.RoleView ,'RoView')
+router.register('org', views.OrganizationView, 'OrgView')
 urlpatterns = [
     path('', include(router.urls)),
+    path('menu/tree/',views.MenuTreeView.as_view(),name='menus_tree')
 ]
