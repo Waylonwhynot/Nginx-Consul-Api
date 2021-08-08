@@ -80,9 +80,11 @@ class RoleView(CommonModelViewSet):
     search_fields = ['name',]
 # 权限接口
 
-class PermissionView(GenericViewSet,MyListModelMixin):
+class PermissionView(CommonModelViewSet):
     queryset = models.Permission.objects.all()
     serializer_class = PermissionSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'method']
 
 # 用户接口
 class UserView(CommonModelViewSet):
