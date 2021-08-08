@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import ListModelMixin
-from .serializer import MenuListSerializer,OrgListSerializer,RoleSerializer,PermissionSerializer,UserSerializer,TreeSerializer
+from .serializer import MenuListSerializer,OrgListSerializer,RoleSerializer,PermissionSerializer,UserSerializer,TreeSerializer,LoginSerializer
 from . import models
+from .pagination import BasicPagination
 from libs.views import MyListModelMixin
 from .SearchBackend import SearchByName
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -10,11 +11,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from libs.views import CommonModelViewSet
 from utils.response import APIResponse
 from rest_framework.generics import ListAPIView
-
+from rest_framework.viewsets import ViewSet
+from rest_framework.decorators import action
 # Create your views here.
 
 # 菜单展示
-
 class TreeAPIView(ListAPIView):
     '''
     自定义树结构View
@@ -80,11 +81,18 @@ class RoleView(CommonModelViewSet):
     search_fields = ['name',]
 # 权限接口
 
-class PermissionView(GenericViewSet,MyListModelMixin):
+class PermissionView(CommonModelViewSet):
+    queryset = models.Permission.objects.all()
+    serializer_class = PermissionSerializer
+    pagination_class = BasicPagination
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'method']
+
+class PermissionAllView(CommonModelViewSet):
     queryset = models.Permission.objects.all()
     serializer_class = PermissionSerializer
 
-# 用户接口
+# 用户信息查询接口
 class UserView(CommonModelViewSet):
     queryset = models.UserProfile.objects.all()
     serializer_class = UserSerializer
@@ -93,3 +101,16 @@ class UserView(CommonModelViewSet):
     search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
 
 
+# 用户登录接口
+class LoginView(ViewSet):
+
+    @action(methods=['post'],detail=False)
+    def loging(self,request,*args,**kwargs):
+        ser = LoginSerializer(data=request.data,context={'request':request})
+        if ser.is_valid():
+            token = ser.context['token']
+            user = ser.context['user']
+            # icon = ser.context['icon']
+            return APIResponse(id=user.id,username=user.username,token=token)
+        else:
+            return APIResponse(code=1,msg='用户名或者密码错误')

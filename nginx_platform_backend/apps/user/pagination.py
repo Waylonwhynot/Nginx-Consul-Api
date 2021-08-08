@@ -5,6 +5,6 @@ class BasicPagination(PageNumberPagination):
     # url中携带页码的key
     page_query_param = 'page'
     # url中用户携带自定义一页条数的key
-    page_size_query_param = 'page_size'
+    page_size_query_param = 'size'
     # 用户最大可自定义一页的条数
-    max_page_size = 10
+    max_page_size = 20

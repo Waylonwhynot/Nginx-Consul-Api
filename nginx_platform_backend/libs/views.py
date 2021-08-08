@@ -1,6 +1,7 @@
 from rest_framework.mixins import ListModelMixin
 from utils.response import APIResponse
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import ListAPIView
 class MyListModelMixin(ListModelMixin):
     """
     List a queryset.
