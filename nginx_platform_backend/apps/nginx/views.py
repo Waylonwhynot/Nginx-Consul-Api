@@ -28,3 +28,5 @@ class NginxOpsViewSet(CommonModelViewSet):
     serializer_class = NginxOpsSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['operator', 'ops_2_conf__name']
+
+

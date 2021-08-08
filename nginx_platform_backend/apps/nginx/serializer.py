@@ -60,3 +60,15 @@ class NginxOpsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.NginxInstanceOps
         fields = '__all__'
+
+
+class NginxActionSerializer(serializers.ModelSerializer):
+    """
+    nginx 操作详情
+    """
+    ops_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    action_2_ops_display = serializers.ReadOnlyField(source='action_2_ops.action_name')
+
+    class Meta:
+        model = models.NginxAction
+        fields = '__all__'
