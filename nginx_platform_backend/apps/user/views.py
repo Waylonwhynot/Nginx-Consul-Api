@@ -3,6 +3,7 @@ from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import ListModelMixin
 from .serializer import MenuListSerializer,OrgListSerializer,RoleSerializer,PermissionSerializer,UserSerializer,TreeSerializer
 from . import models
+from .pagination import BasicPagination
 from libs.views import MyListModelMixin
 from .SearchBackend import SearchByName
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -83,8 +84,13 @@ class RoleView(CommonModelViewSet):
 class PermissionView(CommonModelViewSet):
     queryset = models.Permission.objects.all()
     serializer_class = PermissionSerializer
+    pagination_class = BasicPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'method']
+
+class PermissionAllView(CommonModelViewSet):
+    queryset = models.Permission.objects.all()
+    serializer_class = PermissionSerializer
 
 # 用户接口
 class UserView(CommonModelViewSet):
