@@ -27,6 +27,7 @@ router.register('permission', views.PermissionView, 'PermissionView'),
 router.register('permissions/all', views.PermissionAllView, 'PermissionView'),
 router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
+router.register('',views.LoginView,basename='loginview')
 urlpatterns = [
     path('', include(router.urls)),
     path('menu/tree/',views.MenuTreeView.as_view(),name='menus_tree'),
