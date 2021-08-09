@@ -31,7 +31,7 @@ SECRET_KEY = 'nb9y@ir9$v*7@o^agni6ly8*c6)xi7o(ter@h$*#fe5(%h5l9)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -128,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'Asia/shanghai'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -234,13 +234,13 @@ JWT_AUTH = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        # "LOCATION": "redis://127.0.0.1:6379",
-        "LOCATION": "redis://1.116.65.90:20039",
+        "LOCATION": "redis://127.0.0.1:6379",
+        # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
             "SOCKET_CONNECT_TIMEOUT": 5,
-            "PASSWORD": "123",
+            # "PASSWORD": "123",
         }
     }
 }

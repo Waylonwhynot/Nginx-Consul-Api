@@ -3,19 +3,20 @@ import celery
 import os
 
 # 执行django配置文件，环境变量加入
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "luffyapi.settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nginx_platform_backend.settings.dev")
 
 # 消息中间件
-broker = 'redis://:123@127.0.0.1:6379/1'
+broker = 'redis://:123@1.116.65.90:20039/1'
 
 # 结果存储
-backend = 'redis://:123@127.0.0.1:6379/2'
+backend = 'redis://:123@1.116.65.90:20039/2'
 
 app = celery.Celery('test', broker=broker, backend=backend,
                     include=['celery_task.order_task',
                              'celery_task.user_task',
                              'celery_task.home_task',
-                             'celery_task.sms_task'])
+                             'celery_task.sms_task',
+                             'celery_task.nginx_task'])
 
 # 时区
 app.conf.timezone = 'Asia/Shanghai'
@@ -33,11 +34,11 @@ app.conf.beat_schedule = {
         # 'schedule': crontab(hour=8, day_of_week=1),  # 每周一早八点
         'schedule': crontab(hour=8, day_of_month=1),  # 每月一号早八点
         'args': ('18964352112',),
-    },
-    'update-banner': {
-        'task': 'celery_task.home_task.update_banner',
-        'schedule': timedelta(seconds=10),
-        'args': (),
     }
+    # 'update-banner': {
+    #     'task': 'celery_task.home_task.update_banner',
+    #     'schedule': timedelta(seconds=10),
+    #     'args': (),
+    # }
 }
 

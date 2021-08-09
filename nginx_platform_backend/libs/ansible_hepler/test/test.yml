@@ -1,0 +1,9 @@
+- hosts: default_group
+  gather_facts: no
+  remote_user: root
+  tasks:
+    - name: uptime info
+      shell: uptime
+
+    - name: print hostname
+      shell: echo {{ hostname }}
