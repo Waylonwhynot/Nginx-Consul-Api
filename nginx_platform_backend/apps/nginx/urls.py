@@ -21,4 +21,5 @@ urlpatterns = [
     path('ops/detail/', views_nginx_operation.NginxOpsDetailView.as_view(), name='ng-detail'),
     # consul 操作模块
     path('consul/status/', views_consul.consulStatusView.as_view(), name='opsng-consul-select'),
+    path('consul/ops/', views_consul.consulopsView.as_view(), name='opsng-consul-add'),
 ]

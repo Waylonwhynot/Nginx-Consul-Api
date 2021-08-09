@@ -56,7 +56,7 @@ class NginxOpsSerializer(serializers.ModelSerializer):
     ops_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False, read_only=True)
     nginx_conf = serializers.ReadOnlyField(source="ops_2_conf.name")
-
+    nginx_type_name = serializers.ReadOnlyField(source="type.nginx_type")
     class Meta:
         model = models.NginxInstanceOps
         fields = '__all__'
