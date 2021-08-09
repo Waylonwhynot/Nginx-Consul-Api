@@ -13,6 +13,14 @@ from utils.response import APIResponse
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
+from django.http.response import JsonResponse
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
+from .models import Menu
+from .serializer import MenuSerializer
+from operator import itemgetter
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 # Create your views here.
 
 # 菜单展示
@@ -93,24 +101,300 @@ class PermissionAllView(CommonModelViewSet):
     serializer_class = PermissionSerializer
 
 # 用户信息查询接口
-class UserView(CommonModelViewSet):
+class UserAllView(CommonModelViewSet):
     queryset = models.UserProfile.objects.all()
     serializer_class = UserSerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    # filter_backends = [SearchFilter,DjangoFilterBackend,OrderingFilter]
+    # # filter_backends = [SearchFilter,DjangoFilterBackend,OrderingFilter]
     search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
 
 
 # 用户登录接口
-class LoginView(ViewSet):
+# class LoginView(ViewSet):
+#
+#     @action(methods=['post'],detail=False)
+#     def loging(self,request,*args,**kwargs):
+#         ser = LoginSerializer(data=request.data,context={'request':request})
+#         if ser.is_valid():
+#             token = ser.context['token']
+#             user = ser.context['user']
+#             # icon = ser.context['icon']
+#             return APIResponse(id=user.id,username=user.username,data={'token':token})
+#         else:
+#             return APIResponse(code=1,message='用户名或者密码错误')
 
-    @action(methods=['post'],detail=False)
-    def loging(self,request,*args,**kwargs):
-        ser = LoginSerializer(data=request.data,context={'request':request})
-        if ser.is_valid():
-            token = ser.context['token']
-            user = ser.context['user']
-            # icon = ser.context['icon']
-            return APIResponse(id=user.id,username=user.username,token=token)
+
+class UserAuthView(APIView):
+    '''
+    用户认证获取token
+    '''
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user:
+            payload = jwt_payload_handler(user)
+            jwt_token = jwt_encode_handler(payload)
+            return JsonResponse({
+                'code': 20000,
+                'message': '登录成功',
+                'data': {
+                    'token': jwt_token
+                    # 'token': 'admin'
+                }
+            })
         else:
-            return APIResponse(code=1,msg='用户名或者密码错误')
+            return JsonResponse({
+                'code': 20001,
+                'message': '用户名或密码错误'
+            })
+
+
+class UserInfoView(APIView):
+    '''
+    获取当前用户信息和权限
+    '''
+    # authentication_classes = (JSONWebTokenAuthentication)
+    @classmethod
+    def get_permission_from_role(self, request):
+        try:
+            if request.user:
+                perms_list = []
+                for item in request.user.roles.values('permissions__method').distinct():
+                    perms_list.append(item['permissions__method'])
+                return perms_list
+        except AttributeError:
+            return None
+
+    def get(self, request):
+        if request.user.id is not None:
+            perms = self.get_permission_from_role(request)
+            data = {
+                'id': request.user.id,
+                'username': request.user.username,
+                # 'avatar': request._request._current_scheme_host + '/media/' + str(request.user.image),
+                # 'email': request.user.email,
+                'is_active': request.user.is_active,
+                'createTime': request.user.date_joined,
+                'roles': perms
+            }
+            print('用户权限获取成功')
+            return JsonResponse({'code': 20000, 'data': data})
+        else:
+            print('未获取到用户信息')
+            return JsonResponse({'code': 50008, 'message': '请先登录'})
+
+class UserBuildMenuView(APIView):
+    '''
+    绑定当前用户菜单信息
+    '''
+    def get_menu_from_role(self, request):
+        if request.user:
+            menu_dict = {}
+            menus = request.user.roles.values(
+                'menus__id',
+                'menus__name',
+                'menus__path',
+                'menus__is_frame',
+                'menus__is_show',
+                'menus__component',
+                'menus__icon',
+                'menus__sort',
+                'menus__pid'
+            ).distinct()
+            for item in menus:
+                if item['menus__pid'] is None:
+                    if item['menus__is_frame']:
+                        # 判断是否外部链接
+                        top_menu = {
+                            'id': item['menus__id'],
+                            'path': item['menus__path'],
+                            'component': 'Layout',
+                            'children': [{
+                                'path': item['menus__path'],
+                                'meta': {
+                                    'title': item['menus__name'],
+                                    'icon': item['menus__icon']
+                                }
+                            }],
+                            'pid': item['menus__pid'],
+                            'sort': item['menus__sort']
+                        }
+                    else:
+                        top_menu = {
+                            'id': item['menus__id'],
+                            'name': item['menus__path'],
+                            'path': '/' + item['menus__path'],
+                            'redirect': 'noredirect',
+                            'component': 'Layout',
+                            'alwaysShow': True,
+                            'meta': {
+                                'title': item['menus__name'],
+                                'icon': item['menus__icon']
+                            },
+                            'pid': item['menus__pid'],
+                            'sort': item['menus__sort'],
+                            'children': []
+                        }
+                    menu_dict[item['menus__id']] = top_menu
+                else:
+                    if item['menus__is_frame']:
+                        children_menu = {
+                            'id': item['menus__id'],
+                            'name': item['menus__path'],
+                            'path': item['menus__path'],
+                            'component': 'Layout',
+                            'meta': {
+                                'title': item['menus__name'],
+                                'icon': item['menus__icon'],
+                            },
+                            'pid': item['menus__pid'],
+                            'sort': item['menus__sort']
+                        }
+                    elif item['menus__is_show']:
+                        children_menu = {
+                            'id': item['menus__id'],
+                            'name': item['menus__path'],
+                            'path': item['menus__path'],
+                            'component': item['menus__component'],
+                            'meta': {
+                                'title': item['menus__name'],
+                                'icon': item['menus__icon'],
+                            },
+                            'pid': item['menus__pid'],
+                            'sort': item['menus__sort']
+                        }
+                    else:
+                        children_menu = {
+                            'id': item['menus__id'],
+                            'name': item['menus__path'],
+                            'path': item['menus__path'],
+                            'component': item['menus__component'],
+                            'meta': {
+                                'title': item['menus__name'],
+                                'noCache': True,
+                            },
+                            'hidden': True,
+                            'pid': item['menus__pid'],
+                            'sort': item['menus__sort']
+                        }
+                    menu_dict[item['menus__id']] = children_menu
+            return menu_dict
+
+    def get_all_menu_dict(self):
+        '''
+        获取所有菜单数据，重组结构
+        '''
+        menus = Menu.objects.all()
+        serializer = MenuSerializer(menus, many=True)
+        tree_dict = {}
+        for item in serializer.data:
+            if item['pid'] is None:
+                if item['is_frame']:
+                    # 判断是否外部链接
+                    top_menu = {
+                        'id': item['id'],
+                        'path': item['path'],
+                        'component': 'Layout',
+                        'children': [{
+                            'path': item['path'],
+                            'meta': {
+                                'title': item['name'],
+                                'icon': item['icon']
+                            }
+                        }],
+                        'pid': item['pid'],
+                        'sort': item['sort']
+                    }
+                else:
+                    top_menu = {
+                        'id': item['id'],
+                        'name': item['path'],
+                        'path': '/' + item['path'],
+                        'redirect': 'noredirect',
+                        'component': 'Layout',
+                        'alwaysShow': True,
+                        'meta': {
+                            'title': item['name'],
+                            'icon': item['icon']
+                        },
+                        'pid': item['pid'],
+                        'sort': item['sort'],
+                        'children': []
+                    }
+                tree_dict[item['id']] = top_menu
+            else:
+                if item['is_frame']:
+                    children_menu = {
+                        'id': item['id'],
+                        'name': item['path'],
+                        'path': item['path'],
+                        'component': 'Layout',
+                        'meta': {
+                            'title': item['name'],
+                            'icon': item['icon'],
+                        },
+                        'pid': item['pid'],
+                        'sort': item['sort']
+                    }
+                elif item['is_show']:
+                    children_menu = {
+                        'id': item['id'],
+                        'name': item['path'],
+                        'path': item['path'],
+                        'component': item['component'],
+                        'meta': {
+                            'title': item['name'],
+                            'icon': item['icon'],
+                        },
+                        'pid': item['pid'],
+                        'sort': item['sort']
+                    }
+                else:
+                    children_menu = {
+                        'id': item['id'],
+                        'name': item['path'],
+                        'path': item['path'],
+                        'component': item['component'],
+                        'meta': {
+                            'title': item['name'],
+                            'noCache': True,
+                        },
+                        'hidden': True,
+                        'pid': item['pid'],
+                        'sort': item['sort']
+                    }
+                tree_dict[item['id']] = children_menu
+        return tree_dict
+
+    def get_all_menus(self, request):
+        perms = UserInfoView.get_permission_from_role(request)
+        tree_data = []
+        if 'admin' in perms or request.user.is_superuser:
+            tree_dict = self.get_all_menu_dict()
+        else:
+            tree_dict = self.get_menu_from_role(request)
+        for i in tree_dict:
+            if tree_dict[i]['pid']:
+                pid = tree_dict[i]['pid']
+                parent = tree_dict[pid]
+                parent.setdefault('redirect', 'noredirect')
+                parent.setdefault('alwaysShow', True)
+                parent.setdefault('children', []).append(tree_dict[i])
+                parent['children'] = sorted(parent['children'], key=itemgetter('sort'))
+            else:
+                tree_data.append(tree_dict[i])
+        return tree_data
+
+    def get(self, request):
+        if request.user.id is not None:
+            menu_data = self.get_all_menus(request)
+            return JsonResponse({'code':20000, 'data': menu_data, 'message': '成功'})
+        else:
+            return JsonResponse({'message': '请登录后访问!', 'code': 20000})
+
+def logout(request):
+    response = JsonResponse({'code': 20000, 'status': 'success'})
+    response.delete_cookie('Admin-Token')
+    return response

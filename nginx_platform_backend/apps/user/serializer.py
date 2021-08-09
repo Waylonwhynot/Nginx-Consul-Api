@@ -129,4 +129,12 @@ class LoginSerializer(serializers.ModelSerializer):
         # self.context['icon'] = icon
         return attrs
 
+class MenuSerializer(serializers.ModelSerializer):
+    '''
+    菜单序列化
+    '''
 
+    class Meta:
+        model = Menu
+        fields = ('id', 'name', 'icon', 'path', 'is_show','is_frame', 'sort', 'component', 'pid')
+        extra_kwargs = {'name': {'required': True, 'error_messages': {'required': '必须填写菜单名'}}}

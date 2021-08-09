@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -248,11 +248,29 @@ CACHES = {
 
 
 # 限流
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
+#     # 'DEFAULT_THROTTLE_RATES': {
+#     #     'mobile_throttle': '1/min'
+#     # }
+# }
+
 REST_FRAMEWORK = {
+    # 'DEFAULT_FILTER_BACKENDS': (
+    #     'django_filters.rest_framework.DjangoFilterBackend',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    ),
     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'mobile_throttle': '1/min'
-    # }
+    # 分页
+    # 'DEFAULT_PAGINATION_CLASS': 'libs.drf.myPagePagination.MyPagePagination',
+    # # exception
+    # 'EXCEPTION_HANDLER': 'libs.drf.my_rest_exception.custom_exception_handler',
+    # # 文档
+    # 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 }
 
 ### 用户自定义配置
