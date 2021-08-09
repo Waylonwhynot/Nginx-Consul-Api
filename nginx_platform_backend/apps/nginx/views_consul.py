@@ -26,10 +26,10 @@ class consulStatusView(APIView):
                 print(domain)
                 url = obj.type.consulApi + domain + '?recurse'
                 ret = requests.get(url, timeout=10)
-                return Response({'status': 200, "data": json.loads(ret.text)})
+                return Response({'code': 20000, "data": json.loads(ret.text)})
             except Exception as e:
                 error_logger.error(str(e))
-                return Response({'status': 500, "msg": str(e)})
+                return Response({'code': 500, "msg": str(e)})
 
         else:
-            return Response({'status': 400, 'msg': "conuslApi url is null !!"})
+            return Response({'code': 400, 'msg': "conuslApi url is null !!"})
