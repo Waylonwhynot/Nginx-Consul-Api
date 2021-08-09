@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-"""
-@author: nick
-@time：2021/1/12 15:39
-"""
+
+
 import logging
 import sys
 from pathlib import Path
@@ -25,6 +23,7 @@ def NginxAnsibleCmd(**kwargs):
     # 获取程序本地运行IP，获取生成配置文件使用
     try:
         processIp = socket.gethostbyname(socket.gethostname())
+        print(processIp)
     except Exception as e:
         error_logger.error(str(e))
         return {'status': 500, 'msg': "获取系统IP错误!! 详情:" + str(e)}
@@ -34,7 +33,7 @@ def NginxAnsibleCmd(**kwargs):
         tqm = Runner(res)
         # 判断操作类型, sync or reload
         if kwargs['type'] == 'sync':
-            command = "scp -P 23245 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'],
+            command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'],
                                                                          kwargs['destPath'], kwargs['syncCmd'])
         elif kwargs['type'] == "add_dump":
             command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
@@ -47,7 +46,7 @@ def NginxAnsibleCmd(**kwargs):
         else:
             return {'status': 500, 'msg': "type非法参数!!"}
         ret = tqm.run(module_args=command)
-        return {"status": 200, "data": ret}
+        return {"status": 20000, "data": ret}
     except Exception as e:
         error_logger.error(str(e))
         return {'status': 500, 'msg': str(e)}
