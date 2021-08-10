@@ -69,12 +69,16 @@ class MenuTreeView(TreeAPIView):
     queryset = models.Menu.objects.all()
 
 class MenuView(CommonModelViewSet):
-    queryset = models.Menu.objects.filter()
+    queryset = models.Menu.objects.all()
     serializer_class = MenuListSerializer
 
     #搜索功能
     filter_backends = [SearchFilter]
     search_fields = ['name', 'id',]
+
+class MenuAllView(CommonModelViewSet):
+    queryset = models.Menu.objects.all()
+    serializer_class = MenuListSerializer
 
 # 组织架构接口
 class OrganizationView(CommonModelViewSet):
