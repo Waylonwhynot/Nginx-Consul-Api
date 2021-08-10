@@ -21,7 +21,6 @@ sys.path.insert(0, BASE_DIR)
 APPS_DIR = os.path.join(BASE_DIR, 'apps')
 sys.path.insert(1, APPS_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -32,7 +31,6 @@ SECRET_KEY = 'nb9y@ir9$v*7@o^agni6ly8*c6)xi7o(ter@h$*#fe5(%h5l9)'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -83,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nginx_platform_backend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -103,7 +100,6 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -122,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -136,12 +131,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -149,7 +142,6 @@ MEDIA_URL = '/media/'
 # 扩展user表
 # AUTH_USER_MODEL = 'user.user'
 AUTH_USER_MODEL = 'user.UserProfile'
-
 
 # 真实项目上线后，日志文件打印级别不能过低，因为一次日志记录就是一次文件io操作
 LOGGING = {
@@ -222,8 +214,6 @@ CORS_ALLOW_HEADERS = (
     'content-type',
 )
 
-
-
 # JWT 过期时间
 import datetime
 
@@ -242,10 +232,15 @@ CACHES = {
             "SOCKET_CONNECT_TIMEOUT": 5,
             # "PASSWORD": "123",
         }
-    }
+    },
+    'user_info': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': "redis://127.0.0.1:6379/2",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
 }
-
-
 
 # 限流
 # REST_FRAMEWORK = {
@@ -261,10 +256,15 @@ REST_FRAMEWORK = {
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ),
-    'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
+    'DEFAULT_PERMISSION_CLASSES':
+        (
+            'rest_framework.permissions.IsAuthenticated',  # 登录验证
+            'nginx_platform_backend.utils.permissions.RbacPermission',  # 自定义权限认证
+        ),
+    'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.exception_handler',
     # 分页
     # 'DEFAULT_PAGINATION_CLASS': 'libs.drf.myPagePagination.MyPagePagination',
     # # exception
@@ -273,5 +273,10 @@ REST_FRAMEWORK = {
     # 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 }
 
+BASE_API = 'api/'  # 项目BASE API, 如设置时必须以/结尾
+WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/']  # 权限认证白名单
+# WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/info/', f'/{BASE_API}swagger/.*']  # 权限认证白名单
+REGEX_URL = '{url}'  # 权限匹配时,严格正则url
+# PROJECT_START_TIME = psutil.Process().create_time()
 ### 用户自定义配置
 from .user_settings import *
