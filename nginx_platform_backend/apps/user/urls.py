@@ -28,12 +28,12 @@ router.register('permissions/all', views.PermissionAllView, 'PermissionView'),
 router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
 router.register('user/all', views.UserAllView, 'UserAllView')
+router.register('menuall',views.MenuAllView,'MenuAllView')
 urlpatterns = [
-    path('', include(router.urls)),
-    path('menu/tree/',views.MenuTreeView.as_view(),name='menus_tree'),
-    path('user/info/',views.UserInfoView.as_view(),name='user_info'),
-    path('user/login/',views.UserAuthView.as_view(),name='loginview'),
+    path('menu/tree/', views.MenuTreeView.as_view(), name='menus_tree'),
+    path('user/info/', views.UserInfoView.as_view(), name='user_info'),
+    path('user/login/', views.UserAuthView.as_view(), name='loginview'),
     path('user/build/menus/', views.UserBuildMenuView.as_view(), name='build_menus'),
-    path('user/logout/', views.logout,name='logout'),
-
+    path('user/logout/', views.logout, name='logout'),
+    path('', include(router.urls)),
 ]

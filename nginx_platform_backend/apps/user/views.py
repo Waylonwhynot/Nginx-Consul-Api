@@ -21,6 +21,10 @@ from .models import Menu
 from .serializer import MenuSerializer
 from operator import itemgetter
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from utils.permissions import RbacPermission
+import json
+
+
 # Create your views here.
 
 # 菜单展示
@@ -65,12 +69,16 @@ class MenuTreeView(TreeAPIView):
     queryset = models.Menu.objects.all()
 
 class MenuView(CommonModelViewSet):
-    queryset = models.Menu.objects.filter()
+    queryset = models.Menu.objects.all()
     serializer_class = MenuListSerializer
 
     #搜索功能
     filter_backends = [SearchFilter]
     search_fields = ['name', 'id',]
+
+class MenuAllView(CommonModelViewSet):
+    queryset = models.Menu.objects.all()
+    serializer_class = MenuListSerializer
 
 # 组织架构接口
 class OrganizationView(CommonModelViewSet):
@@ -123,17 +131,22 @@ class UserAllView(CommonModelViewSet):
 #         else:
 #             return APIResponse(code=1,message='用户名或者密码错误')
 
-
+from django_redis import get_redis_connection
 class UserAuthView(APIView):
     '''
     用户认证获取token
     '''
+    authentication_classes = []
+    permission_classes = []
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
 
         if user:
+            conn = get_redis_connection('user_info')
+            conn.incr('visits')
+
             payload = jwt_payload_handler(user)
             jwt_token = jwt_encode_handler(payload)
             return JsonResponse({
@@ -155,7 +168,7 @@ class UserInfoView(APIView):
     '''
     获取当前用户信息和权限
     '''
-    # authentication_classes = (JSONWebTokenAuthentication)
+    # authentication_classes = (JSONWebTokenAuthentication,)
     @classmethod
     def get_permission_from_role(self, request):
         try:
@@ -169,11 +182,24 @@ class UserInfoView(APIView):
 
     def get(self, request):
         if request.user.id is not None:
+
+            user_info = request.user.get_user_info()
+            # 将用户信息缓存到redis
+            conn = get_redis_connection('user_info')
+            if request.user.is_superuser and 'admin' not in user_info['permissions']:
+                user_info['permissions'].append('admin')
+            user_info['permissions'] = json.dumps(user_info['permissions'])
+            # user_info['avatar'] = request._current_scheme_host + user_info.get('avatar')
+            conn.hmset('user_info_%s' % request.user.id, user_info)
+            conn.expire('user_info_%s' % request.user.id, 60 * 60 * 24)  # 设置过期时间为1天
+            # user_info['permissions'] = json.loads(user_info['permissions'])
+
+
             perms = self.get_permission_from_role(request)
             data = {
                 'id': request.user.id,
                 'username': request.user.username,
-                # 'avatar': request._request._current_scheme_host + '/media/' + str(request.user.image),
+                # 'avatar': request._request._current_scheme_host + '/media/image/default.png',
                 # 'email': request.user.email,
                 'is_active': request.user.is_active,
                 'createTime': request.user.date_joined,
@@ -396,5 +422,6 @@ class UserBuildMenuView(APIView):
 
 def logout(request):
     response = JsonResponse({'code': 20000, 'status': 'success'})
+
     response.delete_cookie('Admin-Token')
     return response
