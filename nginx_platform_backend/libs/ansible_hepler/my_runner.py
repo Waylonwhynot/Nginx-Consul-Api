@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-
-import logging
 import sys
 from pathlib import Path
 from multiprocessing import current_process
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 from libs.ansible_hepler.runner import Runner
-
-error_logger = logging.getLogger('log_error')
-info_logger = logging.getLogger('log_info')
+from utils.logging import get_logger
+error_logger = get_logger('log_error')
+info_logger = get_logger('log_info')
 
 
 def NginxAnsibleCmd(**kwargs):
@@ -21,24 +19,27 @@ def NginxAnsibleCmd(**kwargs):
     """
     import socket
     # 获取程序本地运行IP，获取生成配置文件使用
-    try:
-        processIp = socket.gethostbyname(socket.gethostname())
-        print(processIp)
-    except Exception as e:
-        error_logger.error(str(e))
-        return {'status': 500, 'msg': "获取系统IP错误!! 详情:" + str(e)}
+    # try:
+    #     processIp = socket.gethostbyname(socket.gethostname())
+    #     print(processIp)
+    # except Exception as e:
+    #     error_logger.error(str(e))
+    #     return {'status': 500, 'msg': "获取系统IP错误!! 详情:" + str(e)}
     try:
         current_process()._config = {'semprefix': '/mp'}
+        print(current_process()._config)
         res = [{'username': 'root', 'hostname': kwargs['ansibleIp']}]
         tqm = Runner(res)
+        print(tqm)
         # 判断操作类型, sync or reload
-        if kwargs['type'] == 'sync':
-            command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'],
-                                                                         kwargs['destPath'], kwargs['syncCmd'])
-        elif kwargs['type'] == "add_dump":
-            command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
-        elif kwargs['type'] == "reload":
+        # if kwargs['type'] == 'sync':
+        #     command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'],
+        #                                                                  kwargs['destPath'], kwargs['syncCmd'])
+        # elif kwargs['type'] == "add_dump":
+        #     command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
+        if kwargs['type'] == "reload":
             command = kwargs['reloadCmd']
+            print(command)
         elif kwargs['type'] == 'rmConf':
             command = "bash {0} {1}".format(kwargs['rmCmd'], kwargs['rmConf'])
         elif kwargs['type'] == 'justSync':
@@ -48,5 +49,5 @@ def NginxAnsibleCmd(**kwargs):
         ret = tqm.run(module_args=command)
         return {"status": 20000, "data": ret}
     except Exception as e:
-        error_logger.error(str(e))
+        error_logger.info(str(e))
         return {'status': 500, 'msg': str(e)}

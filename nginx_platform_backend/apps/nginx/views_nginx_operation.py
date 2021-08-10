@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 
-import logging
+
 from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,12 +10,11 @@ from rest_framework.views import APIView
 from utils.response import APIResponse
 from .serializer import NginxOpsSerializer, NginxActionSerializer
 from . import models
-from celery_task.nginx_task import nginxSyncAction
+from celery_task.nginx_task import nginxReloadAction
 from .tools import nginxtools
+from utils.logging import get_logger
 
-error_logger = logging.getLogger('log_error')
-info_logger = logging.getLogger('log_info')
-
+logger = get_logger('nginx')
 
 class NginxSyncView(APIView):
     """
@@ -112,75 +111,87 @@ class NginxSyncView(APIView):
             return Response({'status': 500, 'msg': str(e), "data": {"id": opsObj.id}})
 
 
-# class NginxReloadView(APIView):
-#     """
-#     nginx reload 操作模块
-#     """
-#     def post(self, request):
-#         reqData = request.data
-#         # 如果当前NginxConf 状态非running，程序退出
-#         ngConfObj = NginxConf.objects.filter(pk=reqData.get('id')).first()
-#         if ngConfObj.action_ops == "running":
-#             return Response({'status': 500, 'msg': "当前站点已有任务运行，大佬请稍等!!!"})
-#
-#         # 新增NginxInstanceOps
-#         createData = {
-#             "ops_2_conf": reqData.get('id'),
-#             "operator": reqData.get('operator'),
-#             "action_name": "reload"
-#         }
-#         createRes = NginxOpsSerializer(data=createData)
-#         if createRes.is_valid():
-#             ret = createRes.save()
-#             job_id = ret.id
-#             opsObj = NginxInstanceOps.objects.filter(pk=job_id).first()
-#         else:
-#             ngConfObj.action_ops = 'failed'
-#             ngConfObj.save()
-#             return Response({'status': 500, 'msg': "创建reload任务失败，详情: " + createRes.errors})
-#         # reload 操作异步
-#         # ret = tasks.nginxReloadAction(ngConfObj.id, opsObj.id)
-#         # print(ret)
-#         nginx_task.nginxReloadAction.apply_async(args=(ngConfObj.id, opsObj.id))
-#
-#         return Response({'status': 200, "msg": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
-#
-#
-# class NginxRemoveView(APIView):
-#     """
-#     nginx 站点下线操作模块
-#     """
-#
-#     def post(self, request):
-#         reqData = request.data
-#         # 如果当前NginxConf 状态非running，程序退出
-#         ngConfObj = NginxConf.objects.filter(pk=reqData.get('id')).first()
-#         if ngConfObj.action_ops == "running":
-#             return Response({'status': 500, 'msg': "当前站点已有任务运行，大佬请稍等!!!"})
-#
-#         # 新增NginxInstanceOps
-#         createData = {
-#             "ops_2_conf": reqData.get('id'),
-#             "operator": reqData.get('operator'),
-#             "action_name": "remove"
-#         }
-#         createRes = NginxOpsSerializer(data=createData)
-#         if createRes.is_valid():
-#             ret = createRes.save()
-#             job_id = ret.id
-#             opsObj = NginxInstanceOps.objects.filter(pk=job_id).first()
-#         else:
-#             ngConfObj.action_ops = 'failed'
-#             ngConfObj.save()
-#             return Response({'status': 500, 'msg': "创建remove任务失败，详情: " + createRes.errors})
-#         # reload 操作异步
-#         # ret = tasks.nginxRemoveAction(ngConfObj.id, opsObj.id)
-#         # print(ret)
-#         nginx_task.nginxRemoveAction.apply_async(args=(ngConfObj.id, opsObj.id))
-#
-#         return Response({'status': 200, "msg": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
-#
-#
+class NginxReloadView(APIView):
+    """
+    nginx reload 操作模块
+    (1)request.data = {"id":配置id, "operator": this.name, "action_name": 'reload'}
+    (2)查询当前配置文件的状态 如果是running 就退出
+    (3)新增操作记录({哪个配置文件, 操作人, 动作})
+    (4)反序列化验证,通过后保存数据; job_id = 操作日志记录id
+    (5)# reload 操作异步  参数 (配置文件id, 操作事件id)
+       # ret = tasks.nginxReloadAction(ngConfObj.id, opsObj.id)
+       # print(ret)
+       调用远程ansible 主机 执行命令
+    """
+    def post(self, request):
+        reqData = request.data
+        print(reqData)
+        # 如果当前NginxConf 状态非running，程序退出
+        ngConfObj = models.NginxConf.objects.filter(pk=reqData.get('id')).first()
+        if ngConfObj.action_ops == "running":
+            return Response({'code': 500, 'message': "当前站点已有任务运行，大佬请稍等!!!"})
+
+        # 新增NginxInstanceOps
+        createData = {
+            "ops_2_conf": reqData.get('id'),
+            "operator": reqData.get('operator'),
+            "action_name": "reload"
+        }
+        print(createData)
+        createRes = NginxOpsSerializer(data=createData)
+        if createRes.is_valid():
+            ret = createRes.save()
+            job_id = ret.id
+            opsObj = models.NginxInstanceOps.objects.filter(pk=job_id).first()
+            print(opsObj)
+        else:
+            ngConfObj.action_ops = 'failed'
+            ngConfObj.save()
+            return Response({'code': 500, 'message': "创建reload任务失败，详情: " + createRes.errors})
+        # reload 操作异步
+        # ret = tasks.nginxReloadAction(ngConfObj.id, opsObj.id)
+        # print(ret)
+        nginxReloadAction.delay(confId=ngConfObj.id, opsId=opsObj.id)
+        # nginxReloadAction(confId=ngConfObj.id, opsId=opsObj.id)
+
+        return Response({'code': 20000, "message": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
+
+
+class NginxRemoveView(APIView):
+    """
+    nginx 站点下线操作模块
+    """
+
+    def post(self, request):
+        reqData = request.data
+        # 如果当前NginxConf 状态非running，程序退出
+        ngConfObj = NginxConf.objects.filter(pk=reqData.get('id')).first()
+        if ngConfObj.action_ops == "running":
+            return Response({'status': 500, 'msg': "当前站点已有任务运行，大佬请稍等!!!"})
+
+        # 新增NginxInstanceOps
+        createData = {
+            "ops_2_conf": reqData.get('id'),
+            "operator": reqData.get('operator'),
+            "action_name": "remove"
+        }
+        createRes = NginxOpsSerializer(data=createData)
+        if createRes.is_valid():
+            ret = createRes.save()
+            job_id = ret.id
+            opsObj = NginxInstanceOps.objects.filter(pk=job_id).first()
+        else:
+            ngConfObj.action_ops = 'failed'
+            ngConfObj.save()
+            return Response({'status': 500, 'msg': "创建remove任务失败，详情: " + createRes.errors})
+        # reload 操作异步
+        # ret = tasks.nginxRemoveAction(ngConfObj.id, opsObj.id)
+        # print(ret)
+        nginx_task.nginxRemoveAction.apply_async(args=(ngConfObj.id, opsObj.id))
+
+        return Response({'status': 200, "msg": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
+
+
 class NginxOpsDetailView(APIView):
     """
     nginx reload, sync, remove detail 模块

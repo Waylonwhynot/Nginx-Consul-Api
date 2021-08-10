@@ -6,10 +6,10 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nginx_platform_backend.settings.dev")
 
 # 消息中间件
-broker = 'redis://:123@1.116.65.90:20039/1'
+broker = 'redis://10.0.0.80:6379/1'
 
 # 结果存储
-backend = 'redis://:123@1.116.65.90:20039/2'
+backend = 'redis://10.0.0.80:6379/2'
 
 app = celery.Celery('test', broker=broker, backend=backend,
                     include=['celery_task.order_task',

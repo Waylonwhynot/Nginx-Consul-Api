@@ -10,7 +10,7 @@ router = SimpleRouter()
 router.register('ngconf', views.NginxConfigViewSet, 'ngconf')
 # ng集群类型接口
 router.register('ngmodel', views.NginxModelViewSet, 'ngmodel')
-# ng操作日志接口
+# ng操作日志接口(未开放按钮)
 router.register('ngops', views.NginxOpsViewSet, 'nginstaceops')
 
 print(router.urls)
@@ -19,6 +19,7 @@ urlpatterns = [
     # nginx 操作模块
     path('ops/sync/', views_nginx_operation.NginxSyncView.as_view(), name='ng-sync'),
     path('ops/detail/', views_nginx_operation.NginxOpsDetailView.as_view(), name='ng-detail'),
+    path('ops/reload/', views_nginx_operation.NginxReloadView.as_view(), name='opsng-ops-reload'),
     # consul 操作模块
     path('consul/status/', views_consul.consulStatusView.as_view(), name='opsng-consul-select'),
     path('consul/add/', views_consul.consuladdView.as_view(), name='opsng-consul-add'),
