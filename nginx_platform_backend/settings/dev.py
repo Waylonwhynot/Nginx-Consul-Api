@@ -219,6 +219,9 @@ import datetime
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),  # Token刷新有效时间
+    'JWT_ALLOW_REFRESH': True,  # 允许刷新Token
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',  # 定义Token携带头信息, Authorization: Bearer ...
 }
 
 CACHES = {
@@ -243,13 +246,12 @@ CACHES = {
     },
 }
 
-# 限流
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
-#     # 'DEFAULT_THROTTLE_RATES': {
-#     #     'mobile_throttle': '1/min'
-#     # }
-# }
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'mobile_throttle': '1/min'
+    # }
+}
 
 REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': (
