@@ -227,8 +227,8 @@ JWT_AUTH = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.0.0.80:6379",
-        # "LOCATION": "redis://127.0.0.0.1:6379",
+        # "LOCATION": "redis://10.0.0.80:6379",
+        "LOCATION": "redis://127.0.0.0.1:6379",
         # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -239,8 +239,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        # 'LOCATION': "redis://127.0.0.1:6379/2",
-        'LOCATION': "redis://10.0.0.80:6379/2",
+        'LOCATION': "redis://127.0.0.1:6379/2",
+        # 'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -279,7 +279,7 @@ REST_FRAMEWORK = {
 }
 
 BASE_API = 'api/'  # 项目BASE API, 如设置时必须以/结尾
-WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/']  # 权限认证白名单
+WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/',f'/{BASE_API}system/user/info/']  # 权限认证白名单
 # WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/info/', f'/{BASE_API}swagger/.*']  # 权限认证白名单
 REGEX_URL = '^{url}$'  # 权限匹配时,严格正则url
 # PROJECT_START_TIME = psutil.Process().create_time()

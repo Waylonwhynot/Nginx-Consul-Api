@@ -189,6 +189,7 @@ class UserInfoView(APIView):
             if request.user.is_superuser and 'admin' not in user_info['permissions']:
                 user_info['permissions'].append('admin')
             user_info['permissions'] = json.dumps(user_info['permissions'])
+            print('用户的信息是',user_info)
             # user_info['avatar'] = request._current_scheme_host + user_info.get('avatar')
             conn.hmset('user_info_%s' % request.user.id, user_info)
             conn.expire('user_info_%s' % request.user.id, 60 * 60 * 24)  # 设置过期时间为1天
