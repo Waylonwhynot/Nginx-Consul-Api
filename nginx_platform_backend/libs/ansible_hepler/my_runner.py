@@ -17,7 +17,7 @@ def NginxAnsibleCmd(**kwargs):
     :param kwargs:
     :return:
     """
-    import socket
+    # import socket
     # 获取程序本地运行IP，获取生成配置文件使用
     # try:
     #     processIp = socket.gethostbyname(socket.gethostname())
@@ -32,12 +32,14 @@ def NginxAnsibleCmd(**kwargs):
         tqm = Runner(res)
         print(tqm)
         # 判断操作类型, sync or reload
-        # if kwargs['type'] == 'sync':
-        #     command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'],
-        #                                                                  kwargs['destPath'], kwargs['syncCmd'])
-        # elif kwargs['type'] == "add_dump":
-        #     command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
-        if kwargs['type'] == "reload":
+        if kwargs['type'] == 'sync':
+            # command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'], kwargs['destPath'], kwargs['syncCmd'])
+            command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format("10.0.0.80", kwargs['srcFile'], kwargs['destPath'], kwargs['syncCmd'])
+
+        elif kwargs['type'] == "add_dump":
+            command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
+            print(command)
+        elif kwargs['type'] == "reload":
             command = kwargs['reloadCmd']
             print(command)
         elif kwargs['type'] == 'rmConf':
