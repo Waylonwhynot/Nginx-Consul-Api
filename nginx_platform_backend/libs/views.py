@@ -20,7 +20,10 @@ class CommonModelViewSet(ModelViewSet):
         return APIResponse(data=res.data)
 
     def update(self, request, *args, **kwargs):
-        res = super(CommonModelViewSet, self).update(request, *args, **kwargs)
+        try:
+            res = super(CommonModelViewSet, self).update(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
         return APIResponse(data=res.data)
 
     def destroy(self, request, *args, **kwargs):

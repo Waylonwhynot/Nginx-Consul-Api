@@ -36,7 +36,6 @@ class RbacPermission(BasePermission):
         # 如果请求url在白名单，放行
         for safe_url in settings.WHITE_LIST:
             if re.match(settings.REGEX_URL.format(url=safe_url), request_url):
-                print('请求url在白名单，放行')
                 return True
         # admin权限放行
         conn = get_redis_connection('user_info')
@@ -65,7 +64,6 @@ class RbacPermission(BasePermission):
                 print('redis_key是:{}'.format(redis_key))
                 break
         else:
-            print('ddasffds')
             return True # 匹配不到代表没有做权限限制，放行
         # Step 3 redis权限验证
         permissions = json.loads(conn.hget('user_permissions_manage', redis_key).decode())

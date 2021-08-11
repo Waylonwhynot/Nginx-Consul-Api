@@ -89,8 +89,22 @@ class OrganizationView(CommonModelViewSet):
     search_fields = ['name', 'type'] # 按search字段模糊搜索 SearchFilter
     # filter_fields = ['id','name', 'type'] # 按字段精确搜索 DjangoFilterBackend
 
+class OrgAllView(CommonModelViewSet):
+    queryset = models.Organization.objects.all()
+    serializer_class = OrgListSerializer
+    filter_backends = [SearchFilter,OrderingFilter]
+    # filter_backends = [SearchFilter,DjangoFilterBackend,OrderingFilter]
+    search_fields = ['name', 'type'] # 按search字段模糊搜索 SearchFilter
+    # filter_fields = ['id','name', 'type'] # 按字段精确搜索 DjangoFilterBackend
+
 # 角色接口
 class RoleView(CommonModelViewSet):
+    queryset = models.Role.objects.all()
+    serializer_class = RoleSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name',]
+
+class RoleAllView(CommonModelViewSet):
     queryset = models.Role.objects.all()
     serializer_class = RoleSerializer
     filter_backends = [SearchFilter, OrderingFilter]
