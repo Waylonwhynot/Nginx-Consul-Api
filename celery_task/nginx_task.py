@@ -85,7 +85,7 @@ def nginxReloadAction(confId, opsId):
 
 
 
-# @app.task
+@app.task
 def nginxSyncAction(confId, opsId, srcFile):
     """
     异步sync Nginx配置
@@ -95,7 +95,6 @@ def nginxSyncAction(confId, opsId, srcFile):
     :param kwargs: {"id": "ops id"}
     :return:
     """
-    from nginx_platform_backend.apps.nginx import models
     try:
         confObj = models.NginxConf.objects.filter(pk=confId).first()
         opsObj = models.NginxInstanceOps.objects.filter(pk=opsId).first()
@@ -104,7 +103,9 @@ def nginxSyncAction(confId, opsId, srcFile):
             "operator": opsObj.operator,
         }
         print("nginx动作第一步:", inData)
+        # {'action_2_ops': <NginxInstanceOps: luffy.ob1api.com-running-running>, 'operator': 'admin'}
         # 判断是否需要创建consul类型的dump文件
+        print("开始第二步:")
         if confObj.conf_add_status != True and confObj.type.nginx_type == 'consul':
             add_data = {
                 "ansibleIp": confObj.type.managerIp,
@@ -113,10 +114,11 @@ def nginxSyncAction(confId, opsId, srcFile):
                 "domain": confObj.name + ".conf"
             }
             print("nginx动作第二步: ",add_data)
+            # {'ansibleIp': '10.0.0.80', 'type': 'add_dump', 'addCmd': 'ansible -m ping nginx','domain': 'luffy.ob1api.com.conf'}
             # 执行命令
-
             ret = my_runner.NginxAnsibleCmd(**add_data)
             print('nginx动作第三步:', ret)
+            # {'status': 20000, 'data': (2, {'changed': True, 'end': '2021-08-11 20:24:49.042410', 'stdout': '', 'cmd': 'bash ansible -m ping nginx luffy.ob1api.com.conf', 'rc': 2, 'start': '2021-08-11 20:24:48.982602', 'stderr': "/usr/bin/ansible: ansible: line 22: syntax error near unexpected token `('\n/usr/bin/ansible: ansible: line 22: `from __future__ import (absolute_import, division, print_function)'", 'delta': '0:00:00.059808', 'invocation': {'module_args': {'warn': True, 'executable': None, '_uses_shell': True, '_raw_params': 'bash ansible -m ping nginx luffy.ob1api.com.conf', 'removes': None, 'creates': None, 'chdir': None}}, '_ansible_parsed': True, 'stdout_lines': [], 'stderr_lines': ["/usr/bin/ansible: ansible: line 22: syntax error near unexpected token `('", "/usr/bin/ansible: ansible: line 22: `from __future__ import (absolute_import, division, print_function)'"], '_ansible_no_log': False, 'failed': True})}
             code, result = ret.get('data')
             inData['action'] = "dump_path"
             inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])

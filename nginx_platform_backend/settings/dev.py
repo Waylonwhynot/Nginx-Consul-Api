@@ -264,8 +264,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES':
         (
-            'rest_framework.permissions.IsAuthenticated',  # 登录验证
-            'nginx_platform_backend.utils.permissions.RbacPermission',  # 自定义权限认证
+            # 'rest_framework.permissions.IsAuthenticated',  # 登录验证
+            # 'nginx_platform_backend.utils.permissions.RbacPermission',  # 自定义权限认证
         ),
     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.exception_handler',
     # 分页

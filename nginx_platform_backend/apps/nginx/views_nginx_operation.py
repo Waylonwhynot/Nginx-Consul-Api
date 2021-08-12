@@ -19,22 +19,16 @@ logger = get_logger('nginx')
 class NginxSyncView(APIView):
     """
     nginx sync操作
-    (1)接收前端数据, 判断当前配置文件是否有正在执行的操作, 如果没有, 把当前状态改为running
-    (2)Nginx操作表 增加一条记录{"ops_2_conf": 17, "operator": "super admin", "action_name": "sync"}
-    (3)生成文件, 构造数据, {"action_2_ops": opsObj, "action": "SetConf", "msg": "文件写入", "operator": "super admin"}
-    (4)NginxAction(操作详情表) 表中增加一条记录, 信息大致为文件写入
-    (5)查询到www域名,文件内容,写入本地/srv/nginxtemp/
-    (6)写入成功; 构造数据 {"msg": 路径/配置文件写入成功, "action_status": "success"};
-    (7)NginxAction表 更新数据 成功
-    (8) 同步配置, 异步任务, 然后查看异步任务状态
     """
     def post(self, request):
         reqData = request.data
         # {id: 17, operator: super admin, action_name: "sync"}
         # 如果当前NginxConf 状态是running，程序退出
         print('第一步',reqData)
+        # {'id': 2, 'operator': 'admin', 'action_name': 'sync'}
         ngConfObj = models.NginxConf.objects.filter(pk=reqData.get('id')).first()
         print('第二步', ngConfObj.action_ops)
+        # failed
         if ngConfObj.action_ops == "running":
             return Response({'code': 500, 'message': "当前站点已有任务运行，大佬请稍等!!!"})
         # 修改NginxConf 状态为running
@@ -73,29 +67,29 @@ class NginxSyncView(APIView):
             ngWrite = nginxtools.WriteNginxConf()
             res = ngWrite.writeFile(domain, content)
             print(res)
-            if res.get('status') == 200:
+            # {'status': 20000, 'msg': '/tmp/luffy.ob1api.com.conf 写入成功'}
+            if res.get('status') == 20000:
                 upData = {
                     "msg": res.get('msg'),
                     "action_status": "success"
                 }
                 print('第三步', upData)
+                # {'msg': '/tmp/luffy.ob1api.com.conf 写入成功', 'action_status': 'success'}
                 # 更新操作详情表的状态为成功写入
                 models.NginxAction.objects.filter(Q(action_2_ops=opsObj.id) & Q(action='SetConf')).update(**upData)
 
                 # 同步配置
-                srcFile = "/srv/nginxtemp/" + domain + ".conf"
-                # nginxSyncAction.delay(args=(confObj.id, opsObj.id, srcFile))
-                nginxSyncAction(args=(confObj.id, opsObj.id, srcFile))
-                ###################################################
-
+                srcFile = "/tmp/" + domain + ".conf"
+                # nginxSyncAction.delay(args=(confObj.id, opsObj.id, srcFile))\
                 print('异步任务已经执行')
-                print(confObj.id, opsObj.id, srcFile)
-                return Response({'status': 20000, "msg": "请查看任务状态!!", "data": {"id": opsObj.id}})
+                nginxSyncAction.delay(confObj.id, opsObj.id, srcFile)
+                ###################################################
+                return Response({'code': 20000, "message": "请查看任务状态!!", "data": {"id": opsObj.id}})
 
                 # return APIResponse(message='请查看任务状态', data={"id": opsObj.id})
             else:
                 upData = {
-                    "msg": res.get('msg'),
+                    "msg": res.get('message'),
                     "action_status": "failed"
                 }
                 models.NginxAction.objects.filter(Q(action_2_ops=opsObj.id) & Q(action='SetConf')).update(**upData)
@@ -103,14 +97,14 @@ class NginxSyncView(APIView):
                 opsObj.save()
                 ngConfObj.action_ops = 'failed'
                 ngConfObj.save()
-                return Response({'status': 500, 'msg': "SET 1, 写入文件错误！！", "data": {"id": opsObj.id}})
+                return Response({'code': 500, 'message': "SET 1, 写入文件错误！！", "data": {"id": opsObj.id}})
         except Exception as e:
-            error_logger.error(str(e))
+            logger.error(str(e))
             opsObj.ops_status = "failed"
             opsObj.save()
             ngConfObj.action_ops = 'failed'
             ngConfObj.save()
-            return Response({'status': 500, 'msg': str(e), "data": {"id": opsObj.id}})
+            return Response({'code': 500, 'message': str(e), "data": {"id": opsObj.id}})
 
 
 class NginxReloadView(APIView):
