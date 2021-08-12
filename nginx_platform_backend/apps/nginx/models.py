@@ -108,8 +108,8 @@ class NginxAction(models.Model):
         ('dump_path', '生成dump文件'),
         ('sync', '同步操作'),
         ('reload', '重载操作'),
-        ('dns_check', '域名验证'),
-        ('es_check', '访问日志验证'),
+        # ('dns_check', '域名验证'),
+        # ('es_check', '访问日志验证'),
         ('rm_conf', '移除配置文件')
     )
     status_list = (

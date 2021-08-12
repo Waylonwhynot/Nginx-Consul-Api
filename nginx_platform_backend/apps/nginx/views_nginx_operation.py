@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from utils.response import APIResponse
 from .serializer import NginxOpsSerializer, NginxActionSerializer
 from . import models
-from celery_task.nginx_task import nginxReloadAction, nginxSyncAction
+from celery_task.nginx_task import nginxReloadAction, nginxSyncAction, nginxRemoveAction
 from .tools import nginxtools
 from utils.logging import get_logger
 
@@ -110,14 +110,6 @@ class NginxSyncView(APIView):
 class NginxReloadView(APIView):
     """
     nginx reload 操作模块
-    (1)request.data = {"id":配置id, "operator": this.name, "action_name": 'reload'}
-    (2)查询当前配置文件的状态 如果是running 就退出
-    (3)新增操作记录({哪个配置文件, 操作人, 动作})
-    (4)反序列化验证,通过后保存数据; job_id = 操作日志记录id
-    (5)# reload 操作异步  参数 (配置文件id, 操作事件id)
-       # ret = tasks.nginxReloadAction(ngConfObj.id, opsObj.id)
-       # print(ret)
-       调用远程ansible 主机 执行命令
     """
     def post(self, request):
         reqData = request.data
@@ -156,10 +148,6 @@ class NginxReloadView(APIView):
 class NginxRemoveView(APIView):
     """
     nginx 站点下线操作模块
-    nginx reload 操作模块
-    (1)request.data = {"id":配置id, "operator": this.name, "action_name": 'reload'}
-    (2)查询当前配置文件的状态 如果是running 就退出
-    (3)新增操作记录({哪个配置文件, 操作人, 动作})
     (4)反序列化验证,通过后保存数据; job_id = 操作日志记录id
     (5)# reload 操作异步  参数 (配置文件id, 操作事件id)
        # ret = tasks.nginxReloadAction(ngConfObj.id, opsObj.id)
@@ -173,7 +161,7 @@ class NginxRemoveView(APIView):
         # 如果当前NginxConf 状态非running，程序退出
         ngConfObj = models.NginxConf.objects.filter(pk=reqData.get('id')).first()
         if ngConfObj.action_ops == "running":
-            return Response({'status': 500, 'msg': "当前站点已有任务运行，大佬请稍等!!!"})
+            return Response({'code': 500, 'message': "当前站点已有任务运行，大佬请稍等!!!"})
 
         # 新增NginxInstanceOps
         createData = {
@@ -181,6 +169,7 @@ class NginxRemoveView(APIView):
             "operator": reqData.get('operator'),
             "action_name": "remove"
         }
+        print("第一步:操作记录表增加记录:",createData)
         createRes = NginxOpsSerializer(data=createData)
         if createRes.is_valid():
             ret = createRes.save()
@@ -191,23 +180,7 @@ class NginxRemoveView(APIView):
             ngConfObj.save()
             return Response({'code': 500, 'message': "创建remove任务失败，详情: " + createRes.errors})
         # reload 操作异步
-        # ret = tasks.nginxRemoveAction(ngConfObj.id, opsObj.id)
-        # print(ret)
-        nginx_task.nginxRemoveAction.apply_async(args=(ngConfObj.id, opsObj.id))
+        nginxRemoveAction.delay(confId=ngConfObj.id, opsId=opsObj.id)
 
-        return Response({'code': 200, "message": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
+        return Response({'code': 20000, "message": "请查看异步任务状态!!", "data": {"id": opsObj.id}})
 
-
-class NginxOpsDetailView(APIView):
-    """
-    nginx reload, sync, remove detail 模块
-    """
-    def get(self, request):
-        reqData = request.GET
-        ops_obj = models.NginxInstanceOps.objects.filter(pk=reqData.get('id')).first()
-        log_objs = models.NginxAction.objects.filter(action_2_ops=ops_obj).order_by("id")
-        print(ops_obj, log_objs)
-        serializer = NginxActionSerializer(log_objs, many=True)
-        logs = serializer.data
-        serializer_detail = NginxOpsSerializer(ops_obj)
-        return Response({"status": 200, "data": logs, "detail": serializer_detail.data})
