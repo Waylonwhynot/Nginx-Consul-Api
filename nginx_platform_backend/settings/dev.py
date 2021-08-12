@@ -219,13 +219,16 @@ import datetime
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),  # Token刷新有效时间
+    'JWT_ALLOW_REFRESH': True,  # 允许刷新Token
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',  # 定义Token携带头信息, Authorization: Bearer ...
 }
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.0.0.80:6379",
-        # "LOCATION": "redis://127.0.0.0.1:6379",
+        # "LOCATION": "redis://10.0.0.80:6379",
+        "LOCATION": "redis://127.0.0.0.1:6379",
         # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -236,8 +239,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        # 'LOCATION': "redis://127.0.0.1:6379/2",
-        'LOCATION': "redis://10.0.0.80:6379/2",
+        'LOCATION': "redis://127.0.0.1:6379/2",
+        # 'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -245,13 +248,12 @@ CACHES = {
     },
 }
 
-# 限流
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
-#     # 'DEFAULT_THROTTLE_RATES': {
-#     #     'mobile_throttle': '1/min'
-#     # }
-# }
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'mobile_throttle': '1/min'
+    # }
+}
 
 REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': (
@@ -277,7 +279,7 @@ REST_FRAMEWORK = {
 }
 
 BASE_API = 'api/'  # 项目BASE API, 如设置时必须以/结尾
-WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/']  # 权限认证白名单
+WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/',f'/{BASE_API}system/user/info/']  # 权限认证白名单
 # WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/info/', f'/{BASE_API}swagger/.*']  # 权限认证白名单
 REGEX_URL = '^{url}$'  # 权限匹配时,严格正则url
 # PROJECT_START_TIME = psutil.Process().create_time()

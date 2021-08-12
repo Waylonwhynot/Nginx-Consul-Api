@@ -24,16 +24,23 @@ router = SimpleRouter()
 router.register('menu', views.MenuView, 'MenuView')
 # router.register('user', views.UserView, 'UserView')
 router.register('permission', views.PermissionView, 'PermissionView'),
-router.register('permissions/all', views.PermissionAllView, 'PermissionView'),
+router.register('permissionlist', views.PermissionAllView, 'PermissionView'),
 router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
-router.register('user/all', views.UserAllView, 'UserAllView')
-router.register('menuall',views.MenuAllView,'MenuAllView')
+router.register('userlist', views.UserAllView, 'UserAllView')
+router.register('rolelist',views.RoleAllView,'RoleAllView')
+router.register('orglist',views.OrgAllView,'OrgAllView')
+router.register('menulist',views.MenuAllView,'MenuAllView')
+
+router.register('permissionsearch', views.PermissionView, 'PermissionView'),
+router.register('usersearch', views.UserAllView, 'UserAllView')
+router.register('rolesearch',views.RoleAllView,'RoleAllView')
+router.register('orgsearch',views.OrgAllView,'OrgAllView')
+router.register('menusearch',views.MenuView,'MenuAllView')
 urlpatterns = [
-    path('menu/tree/', views.MenuTreeView.as_view(), name='menus_tree'),
+    # path('menu/tree/', views.MenuTreeView.as_view(), name='menus_tree'),
     path('user/info/', views.UserInfoView.as_view(), name='user_info'),
     path('user/login/', views.UserAuthView.as_view(), name='loginview'),
-    path('user/build/menus/', views.UserBuildMenuView.as_view(), name='build_menus'),
     path('user/logout/', views.logout, name='logout'),
     path('', include(router.urls)),
 ]
