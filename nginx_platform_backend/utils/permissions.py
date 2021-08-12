@@ -75,11 +75,9 @@ class RbacPermission(BasePermission):
             if permission.get('method') == request_method:
                 method_hit = True
                 if permission.get('sign') in user_permissions: # 如果权限标识 在 获取到的用户权限表中放行
-                    print('succeeeeeeeeeeesssssssssssss')
                     return True
         else:
             if method_hit:
-                print('33333333333333333')
                 return False
             else:
                 print('finally')
