@@ -159,7 +159,9 @@ class NginxRemoveView(APIView):
         reqData = request.data
         print(reqData)
         # 如果当前NginxConf 状态非running，程序退出
+        print(reqData)
         ngConfObj = models.NginxConf.objects.filter(pk=reqData.get('id')).first()
+        print(ngConfObj)
         if ngConfObj.action_ops == "running":
             return Response({'code': 500, 'message': "当前站点已有任务运行，大佬请稍等!!!"})
 
