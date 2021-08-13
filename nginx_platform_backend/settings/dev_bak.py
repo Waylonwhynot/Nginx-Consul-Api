@@ -82,39 +82,6 @@ TEMPLATES = [
     },
 ]
 
-#############LDAP配置
-
-import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
-
-# Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-AUTH_LDAP_BIND_PASSWORD = '123456'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-    ldap.SCOPE_SUBTREE,
-    '(uid=%(user)s)',
-)
-
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "cn",
-    "username": "sn"
-}
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-
-
-
-############
-
-
 WSGI_APPLICATION = 'nginx_platform_backend.wsgi.application'
 import psutil
 PROJECT_START_TIME = psutil.Process().create_time()
