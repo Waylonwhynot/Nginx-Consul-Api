@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'user',
-    'nginx'
+    'nginx',
+    'monitor',
+# WebSocket
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +83,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nginx_platform_backend.wsgi.application'
-
+import psutil
+PROJECT_START_TIME = psutil.Process().create_time()
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -248,6 +252,21 @@ CACHES = {
     },
 }
 
+# channels配置(配置ASGI, 用于实现WebSocket)
+ASGI_APPLICATION = 'nginx_platform_backend.routing.application'
+
+# django-channels配置
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels_redis.core.RedisChannelLayer",
+        'CONFIG': {
+            'hosts': [f'redis://127.0.0.1:6379/4'],
+            'symmetric_encryption_keys': [SECRET_KEY],
+            'capacity': 1500,
+            'expiry': 10
+        },
+    },
+}
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
     # 'DEFAULT_THROTTLE_RATES': {
@@ -261,8 +280,8 @@ REST_FRAMEWORK = {
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':
         (
