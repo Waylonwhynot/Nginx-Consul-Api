@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/system/', include('user.urls')),
     path('api/nginx/', include('nginx.urls')),
+    path('api/monitor/', include('monitor.urls')),
     # media文件路径开放
     re_path('^media/(?P<path>.*)', serve, {'document_root':settings.MEDIA_ROOT})
 ]
