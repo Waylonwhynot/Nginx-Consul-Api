@@ -1,73 +1,17 @@
-from django.shortcuts import render
-from rest_framework.viewsets import GenericViewSet,ModelViewSet
-from rest_framework.mixins import ListModelMixin
 from .serializer import MenuListSerializer,OrgListSerializer,RoleSerializer,PermissionSerializer,UserSerializer,TreeSerializer,LoginSerializer
 from . import models
 from .pagination import BasicPagination
-from libs.views import MyListModelMixin
-from .SearchBackend import SearchByName
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
 from libs.views import CommonModelViewSet
 from utils.response import APIResponse
-from rest_framework.generics import ListAPIView
-from rest_framework.viewsets import ViewSet
-from rest_framework.decorators import action
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
-from .models import Menu
-from .serializer import MenuSerializer
-from operator import itemgetter
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from utils.permissions import RbacPermission
 import json
 
 
 # Create your views here.
-
-# 菜单展示
-class TreeAPIView(ListAPIView):
-    '''
-    自定义树结构View
-    '''
-    serializer_class = TreeSerializer
-    # authentication_classes = (JSONWebTokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        serializer = self.get_serializer(queryset, many=True)
-        tree_dict = {}
-        tree_data = []
-        try:
-            for item in serializer.data:
-                tree_dict[item['id']] = item
-            for i in tree_dict:
-                if tree_dict[i]['pid']:
-                    pid = tree_dict[i]['pid']
-                    parent = tree_dict[pid]
-                    parent.setdefault('children', []).append(tree_dict[i])
-                else:
-                    tree_data.append(tree_dict[i])
-            results = tree_data
-        except KeyError:
-            results = serializer.data
-        if page is not None:
-            return self.get_paginated_response(results)
-        # print(results)
-        return APIResponse(results)
-
-
-
-class MenuTreeView(TreeAPIView):
-    '''
-    菜单树
-    '''
-    queryset = models.Menu.objects.all()
-
 class MenuView(CommonModelViewSet):
     queryset = models.Menu.objects.all()
     serializer_class = MenuListSerializer
@@ -129,21 +73,6 @@ class UserAllView(CommonModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     # # filter_backends = [SearchFilter,DjangoFilterBackend,OrderingFilter]
     search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
-
-
-# 用户登录接口
-# class LoginView(ViewSet):
-#
-#     @action(methods=['post'],detail=False)
-#     def loging(self,request,*args,**kwargs):
-#         ser = LoginSerializer(data=request.data,context={'request':request})
-#         if ser.is_valid():
-#             token = ser.context['token']
-#             user = ser.context['user']
-#             # icon = ser.context['icon']
-#             return APIResponse(id=user.id,username=user.username,data={'token':token})
-#         else:
-#             return APIResponse(code=1,message='用户名或者密码错误')
 
 from django_redis import get_redis_connection
 class UserAuthView(APIView):
@@ -229,6 +158,5 @@ class UserInfoView(APIView):
 
 def logout(request):
     response = JsonResponse({'code': 20000, 'status': 'success'})
-
     response.delete_cookie('Admin-Token')
     return response
