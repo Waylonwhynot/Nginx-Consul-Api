@@ -249,13 +249,6 @@ CACHES = {
 }
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'nginx_platform_backend.utils.exceptions.common_exception_handler',
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'mobile_throttle': '1/min'
-    # }
-}
-
-REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': (
     #     'django_filters.rest_framework.DjangoFilterBackend',
     # ),
