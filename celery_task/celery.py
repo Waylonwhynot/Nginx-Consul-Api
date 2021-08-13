@@ -12,9 +12,7 @@ broker = 'redis://10.0.0.80:6379/1'
 backend = 'redis://10.0.0.80:6379/2'
 
 app = celery.Celery('test', broker=broker, backend=backend,
-                    include=['celery_task.order_task',
-                             'celery_task.user_task',
-                             'celery_task.home_task',
+                    include=['celery_task.home_task',
                              'celery_task.sms_task',
                              'celery_task.nginx_task'])
 
