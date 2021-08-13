@@ -12,6 +12,7 @@ info_logger = get_logger('log_info')
 
 
 def NginxAnsibleCmd(**kwargs):
+
     """
     远程执行sync, reload nginx
     :param kwargs:
@@ -30,15 +31,24 @@ def NginxAnsibleCmd(**kwargs):
         print(current_process()._config)
         res = [{'username': 'root', 'hostname': kwargs['ansibleIp']}]
         tqm = Runner(res)
-        print(tqm)
         # 判断操作类型, sync or reload
         if kwargs['type'] == 'sync':
-            # command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format(processIp, kwargs['srcFile'], kwargs['destPath'], kwargs['syncCmd'])
-            command = "scp -P 22 root@{0}:{1} {2} && bash {3}".format("10.0.0.80", kwargs['srcFile'], kwargs['destPath'], kwargs['syncCmd'])
-
+            print("查看传输的数据:", kwargs)
+            # {'ansibleIp': '10.0.0.80', 'type': 'sync', 'srcFile': '/tmp/luffy.ob1api.com.conf', 'destPath': '/etc/nginx/conf.d/', 'syncCmd': ''}
+            # command = "scp -P 22 {0} root@{1}:{2} && bash {3}".format(kwargs['srcFile'], "程序节点ip", kwargs['destPath'], kwargs['syncCmd'])
+            import subprocess
+            val = subprocess.check_call('scp -P 22 {0} root@{1}:{2}'.format(kwargs['srcFile'], kwargs['ansibleIp'], kwargs['destPath']), shell=True)
+            if val is not 0:
+                return
+            command = "bash {0}".format(kwargs['syncCmd'])
+            # command = "scp -P 22 {0} root@{1}:{2} && bash {3}".format(kwargs['srcFile'], "10.0.0.1", kwargs['destPath'], kwargs['syncCmd'])
+            print(command)
         elif kwargs['type'] == "add_dump":
+            # command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
             command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
             print(command)
+            # 远程到 ansible 主机 dump 文件 ; 操作ansible主机上的脚本
+            #
         elif kwargs['type'] == "reload":
             command = kwargs['reloadCmd']
             print(command)

@@ -18,9 +18,8 @@ urlpatterns = [
     path('', include(router.urls)),
     # nginx 操作模块
     path('ops/sync/', views_nginx_operation.NginxSyncView.as_view(), name='opsng-ops-sync'),
-    # path('ops/detail/', views_nginx_operation.NginxOpsDetailView.as_view(), name='ng-detail'),
     path('ops/reload/', views_nginx_operation.NginxReloadView.as_view(), name='opsng-ops-reload'),
-    # path('ops/remove/', views_nginx_operation.NginxRemoveView.as_view(), name='opsng-ops-remove'),
+    path('ops/remove/', views_nginx_operation.NginxRemoveView.as_view(), name='opsng-ops-remove'),
     # consul 操作模块
     path('consul/status/', views_consul.consulStatusView.as_view(), name='opsng-consul-select'),
     path('consul/add/', views_consul.consuladdView.as_view(), name='opsng-consul-add'),
