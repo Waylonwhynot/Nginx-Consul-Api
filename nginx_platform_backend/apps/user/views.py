@@ -9,6 +9,7 @@ from rest_framework.viewsets import GenericViewSet
 from django.contrib.auth import authenticate
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 import json
+from utils.response import APIResponse
 
 # 组织架构接口
 class OrganizationView(CommonModelViewSet):
@@ -33,6 +34,26 @@ class PermissionView(CommonModelViewSet):
     pagination_class = BasicPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'method']
+
+class PermissionsMethodsAPIView(APIView):
+
+    """
+    model choice字段API, 需指定choice属性或覆盖get_choice方法
+    """
+    choice = models.Permission.method_choices
+    def get(self, request):
+        methods = [{'value': value[0], 'label': value[1]} for value in self.get_choice()]
+        return APIResponse(data={'results': methods})
+
+    def get_choice(self):
+        assert self.choice is not None, (
+                "'%s' 应该包含一个`choice`属性,或覆盖`get_choice()`方法."
+                % self.__class__.__name__
+        )
+        assert isinstance(self.choice, tuple) and len(self.choice) > 0, 'choice数据错误, 应为二维元组'
+        for values in self.choice:
+            assert isinstance(values, tuple) and len(values) == 2, 'choice数据错误, 应为二维元组'
+        return self.choice
 
 # 查询所有权限（不加分页）
 class PermissionAllView(GenericViewSet,MyListModelMixin):

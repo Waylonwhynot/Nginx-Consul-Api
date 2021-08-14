@@ -42,5 +42,6 @@ urlpatterns = [
     path('user/info/', views.UserInfoView.as_view(), name='user_info'),
     path('user/login/', views.UserAuthView.as_view(), name='loginview'),
     path('user/logout/', views.logout, name='logout'),
+    path('permissions/methods/', views.PermissionsMethodsAPIView.as_view()),
     path('', include(router.urls)),
 ]

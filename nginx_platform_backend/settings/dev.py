@@ -129,8 +129,10 @@ DATABASES = {
         'NAME': 'nginx_consul',
         'USER': 'nginx',
         'PASSWORD': password,
-        'HOST': '1.116.65.90',
-        'PORT': 20036
+        # 'HOST': '1.116.65.90',
+        # 'PORT': 20036,
+        'HOST': '127.0.0.1',
+        'PORT': 3306
     }
 }
 import pymysql
