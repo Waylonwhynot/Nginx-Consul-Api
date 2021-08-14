@@ -82,39 +82,6 @@ TEMPLATES = [
     },
 ]
 
-#############LDAP配置
-
-import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
-
-# Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-AUTH_LDAP_BIND_PASSWORD = '123456'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-    ldap.SCOPE_SUBTREE,
-    '(uid=%(user)s)',
-)
-
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "cn",
-    "username": "sn"
-}
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-
-
-
-############
-
-
 WSGI_APPLICATION = 'nginx_platform_backend.wsgi.application'
 import psutil
 PROJECT_START_TIME = psutil.Process().create_time()
@@ -177,6 +144,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # 扩展user表
+# AUTH_USER_MODEL = 'user.user'
 AUTH_USER_MODEL = 'user.UserProfile'
 
 # 真实项目上线后，日志文件打印级别不能过低，因为一次日志记录就是一次文件io操作
@@ -275,8 +243,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': "redis://127.0.0.1:6379/2",
-        # 'LOCATION': "redis://10.0.0.80:6379/2",
+        # 'LOCATION': "redis://127.0.0.1:6379/2",
+        'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -292,8 +260,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': "channels_redis.core.RedisChannelLayer",
         'CONFIG': {
-            'hosts': [f'redis://127.0.0.1:6379/4'],
-            # 'hosts': [f'redis://10.0.0.80:6379/4'],
+            # 'hosts': [f'redis://127.0.0.1:6379/4'],
+            'hosts': [f'redis://10.0.0.80:6379/4'],
             'symmetric_encryption_keys': [SECRET_KEY],
             'capacity': 1500,
             'expiry': 10
@@ -325,6 +293,7 @@ REST_FRAMEWORK = {
 
 BASE_API = 'api/'  # 项目BASE API, 如设置时必须以/结尾
 WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/logout/',f'/{BASE_API}system/user/info/']  # 权限认证白名单
+# WHITE_LIST = [f'/{BASE_API}system/user/login/', f'/{BASE_API}system/user/info/', f'/{BASE_API}swagger/.*']  # 权限认证白名单
 REGEX_URL = '^{url}$'  # 权限匹配时,严格正则url
 # PROJECT_START_TIME = psutil.Process().create_time()
 ### 用户自定义配置
