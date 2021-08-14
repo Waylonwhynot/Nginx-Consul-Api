@@ -26,10 +26,7 @@ class CommonModelViewSet(ModelViewSet):
 
 
     def update(self, request, *args, **kwargs):
-        try:
-            res = super(CommonModelViewSet, self).update(request, *args, **kwargs)
-        except Exception as e:
-            print(e)
+        res = super(CommonModelViewSet, self).update(request, *args, **kwargs)
         return APIResponse(data=res.data)
 
 
