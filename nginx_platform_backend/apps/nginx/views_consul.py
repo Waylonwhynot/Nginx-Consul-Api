@@ -24,9 +24,7 @@ class consulStatusView(APIView):
         print(obj.type.consulApi)
         if obj.type.consulApi:
             try:
-                print(obj.name)
                 domain = '.'.join(obj.name.split('.')[0:-2]) + '_server'
-                print(domain)
                 url = obj.type.consulApi + domain + '?recurse'
                 ret = requests.get(url, timeout=10)
                 return Response({'code': 20000, "data": json.loads(ret.text)})
