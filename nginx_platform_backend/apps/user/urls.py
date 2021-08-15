@@ -21,26 +21,27 @@ from . import views
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
-router.register('menu', views.MenuView, 'MenuView')
-# router.register('user', views.UserView, 'UserView')
+
+# 用户 、角色 、权限、组织增删改查接口
 router.register('permission', views.PermissionView, 'PermissionView'),
-router.register('permissionlist', views.PermissionAllView, 'PermissionView'),
 router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
-router.register('userlist', views.UserAllView, 'UserAllView')
-router.register('rolelist',views.RoleAllView,'RoleAllView')
-router.register('orglist',views.OrgAllView,'OrgAllView')
-router.register('menulist',views.MenuAllView,'MenuAllView')
 
-router.register('permissionsearch', views.PermissionView, 'PermissionView'),
-router.register('usersearch', views.UserAllView, 'UserAllView')
-router.register('rolesearch',views.RoleAllView,'RoleAllView')
-router.register('orgsearch',views.OrgAllView,'OrgAllView')
-router.register('menusearch',views.MenuView,'MenuAllView')
+# 用户 、角色 、权限、菜单、组织查询所有接口
+router.register('userlist', views.UserAllView, 'UserListView')
+router.register('rolelist',views.RoleView,'RoleListView')
+router.register('permissionlist', views.PermissionAllView, 'PermissionListView'),
+router.register('orglist',views.OrganizationView,'OrgListView')
+
+# 搜索接口
+router.register('permissionsearch', views.PermissionView, 'PermissionSearchView'),
+router.register('usersearch', views.UserAllView, 'UserSearchView')
+router.register('rolesearch',views.RoleView,'RoleSearchView')
+router.register('orgsearch',views.OrganizationView,'OrgSearchView')
 urlpatterns = [
-    # path('menu/tree/', views.MenuTreeView.as_view(), name='menus_tree'),
     path('user/info/', views.UserInfoView.as_view(), name='user_info'),
     path('user/login/', views.UserAuthView.as_view(), name='loginview'),
     path('user/logout/', views.logout, name='logout'),
+    path('permissions/methods/', views.PermissionsMethodsAPIView.as_view()),
     path('', include(router.urls)),
 ]

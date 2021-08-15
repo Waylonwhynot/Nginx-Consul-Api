@@ -1,44 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from libs.models import CbaseModel
-# Create your models here.
-class Menu(CbaseModel):
-    """
-    菜单
-    """
-    name = models.CharField(max_length=30, verbose_name="菜单名")
-    icon = models.CharField(max_length=50, null=True, blank=True, verbose_name="图标")
-    path = models.CharField(max_length=158, null=True, blank=True, unique=True, verbose_name="链接地址")
-    is_frame = models.BooleanField(default=False, verbose_name="外部菜单")
-    is_show = models.BooleanField(default=True, verbose_name="显示标记")
-    sort = models.IntegerField(null=True, blank=True, verbose_name="排序标记")
-    component = models.CharField(max_length=200, null=True, blank=True, verbose_name="组件")
-    pid = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="父菜单")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = '菜单'
-        verbose_name_plural = verbose_name
-        ordering = ['id']
-
-
-# class Permission(CbaseModel):
-#     """
-#     权限
-#     """
-#     name = models.CharField(max_length=30, unique=True, verbose_name="权限名")
-#     method = models.CharField(max_length=50, null=True, blank=True, verbose_name="方法")
-#     pid = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="父权限")
-#
-#     def __str__(self):
-#         return self.name
-#
-#     class Meta:
-#         verbose_name = '权限'
-#         verbose_name_plural = verbose_name
-#         ordering = ['id']
 
 class Permission(CbaseModel):
     """
@@ -54,6 +16,7 @@ class Permission(CbaseModel):
     name = models.CharField(max_length=30, unique=True, verbose_name="权限名")
     sign = models.CharField(max_length=30,verbose_name='权限标识')
     method = models.CharField(max_length=8, blank=True, default='', choices=method_choices, verbose_name='方法')
+    menu = models.BooleanField(verbose_name='是否为菜单')  # True为菜单,False为接口
     path = models.CharField(max_length=200, blank=True, default='', verbose_name='请求路径正则')
     pid = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, verbose_name='父权限')
     desc = models.CharField(max_length=30, null=True,blank=True, default='', verbose_name='权限描述')
@@ -74,7 +37,7 @@ class Role(CbaseModel):
     """
     name = models.CharField(max_length=32, unique=True, verbose_name="角色")
     permissions = models.ManyToManyField("Permission", blank=True, verbose_name="权限")
-    menus = models.ManyToManyField("Menu", blank=True, verbose_name="菜单")
+    # menus = models.ManyToManyField("Menu", blank=True, verbose_name="菜单")
     desc = models.CharField(max_length=50, blank=True, null=True, verbose_name="描述")
 
     class Meta:
