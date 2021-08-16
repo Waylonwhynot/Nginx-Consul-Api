@@ -5,9 +5,11 @@ from .celery import app
 
 from django.core.cache import cache
 from utils.logging import get_logger
+
 error_logger = get_logger('log_error')
 info_logger = get_logger('log_info')
 from nginx import models
+
 
 def CacheLog(**kwargs):
     """
@@ -23,6 +25,7 @@ def CacheLog(**kwargs):
     else:
         cache.set(kwargs['group'], [data], timeout=None)
 
+
 @app.task
 def nginxReloadAction(confId, opsId):
     """
@@ -37,7 +40,7 @@ def nginxReloadAction(confId, opsId):
         inData = {
             "action_2_ops": opsObj,
             "operator": opsObj.operator,
-            "action":  "reload"
+            "action": "reload"
         }
         # 执行Reload操作
         reloadData = {
@@ -48,7 +51,8 @@ def nginxReloadAction(confId, opsId):
         ret = my_runner.NginxAnsibleCmd(**reloadData)
         code, result = ret.get('data')
         inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])
-        if code == 0 and ret.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result['stdout']:
+        if code == 0 and ret.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result[
+            'stdout']:
             inData['action_status'] = "success"
             models.NginxAction.objects.create(**inData)
             # 更新ops 状态
@@ -72,7 +76,6 @@ def nginxReloadAction(confId, opsId):
         opsObj.ops_status = 'failed'
         opsObj.save()
         return {"code": 500, "message": "异常信息：" + str(e)}
-
 
 
 @app.task
@@ -103,12 +106,11 @@ def nginxSyncAction(confId, opsId, srcFile):
                 "addCmd": confObj.type.dumpCmd,
                 "domain": confObj.name + ".conf"
             }
-            print("nginx动作第二步: ",add_data)
+            print("nginx动作第二步: ", add_data)
             # {'ansibleIp': '10.0.0.80', 'type': 'add_dump', 'addCmd': 'ansible -m ping nginx','domain': 'luffy.ob1api.com.conf'}
             # 执行命令
             ret = my_runner.NginxAnsibleCmd(**add_data)
             print('nginx动作第三步:', ret)
-            # {'status': 20000, 'data': (2, {'changed': True, 'end': '2021-08-11 20:24:49.042410', 'stdout': '', 'cmd': 'bash ansible -m ping nginx luffy.ob1api.com.conf', 'rc': 2, 'start': '2021-08-11 20:24:48.982602', 'stderr': "/usr/bin/ansible: ansible: line 22: syntax error near unexpected token `('\n/usr/bin/ansible: ansible: line 22: `from __future__ import (absolute_import, division, print_function)'", 'delta': '0:00:00.059808', 'invocation': {'module_args': {'warn': True, 'executable': None, '_uses_shell': True, '_raw_params': 'bash ansible -m ping nginx luffy.ob1api.com.conf', 'removes': None, 'creates': None, 'chdir': None}}, '_ansible_parsed': True, 'stdout_lines': [], 'stderr_lines': ["/usr/bin/ansible: ansible: line 22: syntax error near unexpected token `('", "/usr/bin/ansible: ansible: line 22: `from __future__ import (absolute_import, division, print_function)'"], '_ansible_no_log': False, 'failed': True})}
             code, result = ret.get('data')
             inData['action'] = "dump_path"
             inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])
@@ -142,7 +144,8 @@ def nginxSyncAction(confId, opsId, srcFile):
         inData['action'] = "sync"
         inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])
         # 返回结果判断
-        if code == 0 and ret.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result['stdout']:
+        if code == 0 and ret.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result[
+            'stdout']:
             inData['action_status'] = "success"
             models.NginxAction.objects.create(**inData)
             opsObj.ops_status = 'success'
@@ -173,6 +176,7 @@ def nginxSyncAction(confId, opsId, srcFile):
         # 返回处理
         pass
 
+
 @app.task
 def nginxRemoveAction(confId, opsId):
     """
@@ -201,8 +205,9 @@ def nginxRemoveAction(confId, opsId):
         code, result = removeRet.get('data')
         inData['action'] = 'rm_conf'
         inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])
-        if code == 0 and removeRet.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result[
-            'stdout']:
+        if code == 0 and removeRet.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in \
+                result[
+                    'stdout']:
             inData['action_status'] = "success"
             models.NginxAction.objects.create(**inData)
         else:
@@ -219,7 +224,7 @@ def nginxRemoveAction(confId, opsId):
             "type": 'justSync',
             "syncCmd": confObj.type.syncCmd
         }
-        print("移除配置文件后:准备sync",syncData)
+        print("移除配置文件后:准备sync", syncData)
         # 执行sync命令
         ret = my_runner.NginxAnsibleCmd(**syncData)
         code, result = ret.get('data')
@@ -257,7 +262,6 @@ def nginxRemoveAction(confId, opsId):
         opsObj.save()
         return {"code": 500, "msg": "异常信息：" + str(e)}
 
-
 # def dns_check(domain):
 #     from socket import gethostbyname
 #     try:
@@ -266,5 +270,3 @@ def nginxRemoveAction(confId, opsId):
 #             return {"status": 200, "data": host}
 #     except Exception as e:
 #         return {"status": 500, "data": "解析不存在!!"}
-
-

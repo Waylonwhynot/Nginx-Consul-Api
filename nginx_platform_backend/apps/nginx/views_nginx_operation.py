@@ -80,8 +80,8 @@ class NginxSyncView(APIView):
 
                 # 同步配置
                 srcFile = "/tmp/" + domain + ".conf"
-                # nginxSyncAction.delay(args=(confObj.id, opsObj.id, srcFile))\
                 print('异步任务已经执行')
+                # nginxSyncAction(confObj.id, opsObj.id, srcFile)
                 nginxSyncAction.delay(confObj.id, opsObj.id, srcFile)
                 ###################################################
                 return Response({'code': 20000, "message": "请查看任务状态!!", "data": {"id": opsObj.id}})

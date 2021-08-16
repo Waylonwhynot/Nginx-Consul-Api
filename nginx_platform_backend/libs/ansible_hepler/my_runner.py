@@ -28,6 +28,7 @@ def NginxAnsibleCmd(**kwargs):
     #     return {'status': 500, 'msg': "获取系统IP错误!! 详情:" + str(e)}
     try:
         current_process()._config = {'semprefix': '/mp'}
+        print(current_process()._config)
         res = [{'username': 'root', 'hostname': kwargs['ansibleIp']}]
         tqm = Runner(res)
         # 判断操作类型, sync or reload
@@ -43,11 +44,9 @@ def NginxAnsibleCmd(**kwargs):
             # command = "scp -P 22 {0} root@{1}:{2} && bash {3}".format(kwargs['srcFile'], "10.0.0.1", kwargs['destPath'], kwargs['syncCmd'])
             print(command)
         elif kwargs['type'] == "add_dump":
-            # command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
             command = "bash {0} {1}".format(kwargs['addCmd'], kwargs['domain'])
             print(command)
             # 远程到 ansible 主机 dump 文件 ; 操作ansible主机上的脚本
-            #
         elif kwargs['type'] == "reload":
             command = kwargs['reloadCmd']
             print(command)
@@ -58,6 +57,7 @@ def NginxAnsibleCmd(**kwargs):
         else:
             return {'status': 500, 'msg': "type非法参数!!"}
         ret = tqm.run(module_args=command)
+        print(ret)
         return {"status": 20000, "data": ret}
     except Exception as e:
         error_logger.info(str(e))
