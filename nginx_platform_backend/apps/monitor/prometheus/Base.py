@@ -119,3 +119,9 @@ class BaseMonitor:
         time_range = self.timeQuery(start_time, end_time, step)
         result = self.getQueryRange(query, time_range)
         return result
+
+    def get_file_usage(self, address, start_time, end_time, step=15):
+        query = 'node_filefd_allocated{instance="' + address + '"}'
+        time_range = self.timeQuery(start_time, end_time, step)
+        result = self.getQueryRange(query, time_range)
+        return result

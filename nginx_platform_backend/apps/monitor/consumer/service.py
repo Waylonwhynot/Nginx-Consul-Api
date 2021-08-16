@@ -1,10 +1,14 @@
 import json
+import time
 from datetime import datetime
 
 import psutil
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
+
+from monitor.prometheus.Base import BaseMonitor
+from utils.response import APIResponse
 
 
 class ResourcesConsumer(AsyncWebsocketConsumer):
@@ -79,4 +83,134 @@ class ResourcesConsumer(AsyncWebsocketConsumer):
                 'sys': {'run_time': f'{days} 天 {hours} 小时'},
                 'time': {'date': now_date, 'time': now_time}
                 }
+        return data
+
+class ResourcesNginxConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        # 建立连接
+        if not self.scope['user']:
+            await self.close()
+        else:
+            await self.channel_layer.group_add(
+                self.scope['user'].username,
+                self.channel_name,
+            )
+            await self.accept()
+
+    async def receive(self, text_data=None, bytes_data=None):
+        # 接收消息
+        data = await self.get_data()
+        await self.channel_layer.group_send(
+            self.scope['user'].username,
+            {
+                'type': 'service.message',
+                'message': json.dumps(data),
+            }
+        )
+
+    async def disconnect(self, code):
+        # 关闭
+        await self.channel_layer.group_discard(
+            self.scope['user'].username,
+            self.channel_name
+        )
+
+    async def service_message(self, event):
+        # 发送信息
+        await self.send(event['message'])
+
+    @database_sync_to_async
+    def get_data(self):
+        service_info = dict()
+        service_info['up_and_down'] = self.get_up_down_ip()
+        service_info['uptime'] = self.get_up_time()
+        service_info['os'] = self.get_os_release()
+        service_info['cpu_cores'] = self.get_cpu_cores()
+        service_info['cpu_usage'] = self.get_cpu_usage()
+        service_info['mem_usage'] = self.get_mem_usage()
+        service_info['file_usage'] = self.get_file_usage()
+        return service_info
+
+    @staticmethod
+    def get_up_down_ip():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        return up_down_list
+
+    @staticmethod
+    def get_up_time():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        data = {}
+        for address in up_list:
+            uptime = base_monitor.get_up_time(address=address)
+            data[address] = uptime
+        return data
+
+    @staticmethod
+    def get_os_release():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        data = {}
+        for address in up_list:
+            os = base_monitor.get_os_release(address=address)
+            data[address] = os
+        return data
+
+    @staticmethod
+    def get_cpu_cores():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        data = {}
+        for address in up_list:
+            cpu_cores = base_monitor.get_cpu_cores(address=address)
+            data[address] = cpu_cores
+        return data
+
+    @staticmethod
+    def get_cpu_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_cpu_usage(address=address, start_time=start_time, end_time=end_time)
+            instance = result[0]['metric']['instance']
+            cpu_usage = str(round(float(result[0]['values'][-1][-1]), 2)) + '%'
+            data[instance] = cpu_usage
+        return data
+
+    @staticmethod
+    def get_mem_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_mem_usage(address=address, start_time=start_time, end_time=end_time)
+            mem_usage = str(round(float(result[0]['values'][-1][-1]), 2)) + '%'
+            data[address] = mem_usage
+        return data
+
+
+    @staticmethod
+    def get_file_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_file_usage(address=address, start_time=start_time, end_time=end_time)
+            # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
+            file_usage = str(float(result[0]['values'][-1][-1]))
+            data[address] = file_usage
         return data

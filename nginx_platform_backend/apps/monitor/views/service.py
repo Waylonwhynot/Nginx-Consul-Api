@@ -53,6 +53,7 @@ class MonitorNginxAPIView(APIView):
         service_info['cpu_cores'] = self.get_cpu_cores()
         service_info['cpu_usage'] = self.get_cpu_usage()
         service_info['mem_usage'] = self.get_mem_usage()
+        service_info['file_usage'] = self.get_file_usage()
         return APIResponse(data=service_info)
 
     @staticmethod
@@ -66,9 +67,10 @@ class MonitorNginxAPIView(APIView):
         base_monitor = BaseMonitor()
         up_down_list = base_monitor.target()
         up_list = up_down_list['up']
+        data = {}
         for address in up_list:
             uptime = base_monitor.get_up_time(address=address)
-            data = {address: uptime}
+            data[address]= uptime
         return data
 
     @staticmethod
@@ -76,9 +78,10 @@ class MonitorNginxAPIView(APIView):
         base_monitor = BaseMonitor()
         up_down_list = base_monitor.target()
         up_list = up_down_list['up']
+        data = {}
         for address in up_list:
             os = base_monitor.get_os_release(address=address)
-            data = {address: os}
+            data[address]= os
         return data
 
     @staticmethod
@@ -86,9 +89,10 @@ class MonitorNginxAPIView(APIView):
         base_monitor = BaseMonitor()
         up_down_list = base_monitor.target()
         up_list = up_down_list['up']
+        data = {}
         for address in up_list:
             cpu_cores = base_monitor.get_cpu_cores(address=address)
-            data = {address: cpu_cores}
+            data[address] = cpu_cores
         return data
 
     @staticmethod
@@ -98,11 +102,12 @@ class MonitorNginxAPIView(APIView):
         up_list = up_down_list['up']
         start_time = int(time.time() - 900)
         end_time = int(time.time())
+        data = {}
         for address in up_list:
             result = base_monitor.get_cpu_usage(address=address, start_time=start_time , end_time=end_time)
             instance = result[0]['metric']['instance']
             cpu_usage = str(round(float(result[0]['values'][-1][-1]), 2)) + '%'
-            data = {instance: cpu_usage}
+            data[instance] = cpu_usage
         return data
 
     @staticmethod
@@ -112,8 +117,26 @@ class MonitorNginxAPIView(APIView):
         up_list = up_down_list['up']
         start_time = int(time.time() - 900)
         end_time = int(time.time())
+        data = {}
         for address in up_list:
             result = base_monitor.get_mem_usage(address=address, start_time=start_time , end_time=end_time)
             mem_usage = str(round(float(result[0]['values'][-1][-1]), 2)) + '%'
-            data = {address: mem_usage}
+            data[address] = mem_usage
+        return data
+
+   #  node_filefd_allocated{instance = ~"192\\.168\\.11\\.251:9100"}
+
+    @staticmethod
+    def get_file_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_file_usage(address=address, start_time=start_time, end_time=end_time)
+            # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
+            file_usage = str(float(result[0]['values'][-1][-1]))
+            data[address] = file_usage
         return data
