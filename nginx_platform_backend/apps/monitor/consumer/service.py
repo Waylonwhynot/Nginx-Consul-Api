@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+# -*- coding: utf-8 -*-
+
+>>>>>>> b0f40090ac2faf985c0585e319eae160c2bfd426
 import json
 from datetime import datetime
 

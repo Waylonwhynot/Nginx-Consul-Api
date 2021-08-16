@@ -28,7 +28,6 @@ router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
 router.register('user', views.UserAllView, 'UserView')
 router.register('permissionlist', views.PermissionListView, 'PermissionListView'),
-# router.register('orglist',views.OrganizationView,'OrgListView')
 
 urlpatterns = [
     path('user/info/', views.UserInfoView.as_view(), name='user_info'),
