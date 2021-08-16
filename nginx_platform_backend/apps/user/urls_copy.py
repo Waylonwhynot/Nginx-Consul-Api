@@ -27,8 +27,19 @@ router.register('permission', views.PermissionView, 'PermissionView'),
 router.register('role', views.RoleView ,'RoView')
 router.register('org', views.OrganizationView, 'OrgView')
 router.register('user', views.UserAllView, 'UserView')
-router.register('permissionlist', views.PermissionListView, 'PermissionListView'),
 
+
+# 用户 、角色 、权限、菜单、组织查询所有接口
+router.register('userlist', views.UserAllView, 'UserListView')
+router.register('rolelist',views.RoleView,'RoleListView')
+router.register('permissionlist', views.PermissionAllView, 'PermissionListView'),
+router.register('orglist',views.OrganizationView,'OrgListView')
+
+# 搜索接口
+router.register('permissionsearch', views.PermissionView, 'PermissionSearchView'),
+router.register('usersearch', views.UserAllView, 'UserSearchView')
+router.register('rolesearch',views.RoleView,'RoleSearchView')
+router.register('orgsearch',views.OrganizationView,'OrgSearchView')
 urlpatterns = [
     path('user/info/', views.UserInfoView.as_view(), name='user_info'),
     path('user/login/', views.UserAuthView.as_view(), name='loginview'),

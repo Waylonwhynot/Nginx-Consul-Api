@@ -127,10 +127,10 @@ DATABASES = {
         'NAME': 'nginx_consul',
         'USER': 'nginx',
         'PASSWORD': password,
-        # 'HOST': '1.116.65.90',
-        # 'PORT': 20036,
-        'HOST': '127.0.0.1',
-        'PORT': 3306
+        'HOST': '1.116.65.90',
+        'PORT': 20036,
+        # 'HOST': '127.0.0.1',
+        # 'PORT': 3306
     }
 }
 import pymysql
@@ -269,7 +269,7 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
-            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_CONNECT_TIMEOUT": 10,
             # "PASSWORD": "123",
         }
     },
