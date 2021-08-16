@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author   : Wang Meng
-@github   : https://github.com/tianpangji 
-@software : PyCharm 
-@file     : service.py
-@create   : 2020/9/26 18:21
-"""
 import platform
 import socket
 

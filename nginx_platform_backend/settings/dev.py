@@ -88,27 +88,27 @@ import ldap
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-AUTH_LDAP_BIND_PASSWORD = '123456'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-    ldap.SCOPE_SUBTREE,
-    '(uid=%(user)s)',
-)
-
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "cn",
-    "username": "sn"
-}
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
+# AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
+#
+# AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
+# AUTH_LDAP_BIND_PASSWORD = '123456'
+#
+# AUTH_LDAP_USER_SEARCH = LDAPSearch(
+#     'cn=Users,ou=Tech,dc=sholdboy,dc=com',
+#     ldap.SCOPE_SUBTREE,
+#     '(uid=%(user)s)',
+# )
+#
+# AUTH_LDAP_USER_ATTR_MAP = {
+#     "first_name": "cn",
+#     "username": "sn"
+# }
+#
+# AUTHENTICATION_BACKENDS = (
+#     'django_auth_ldap.backend.LDAPBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
+# #
 
 
 
@@ -129,10 +129,10 @@ DATABASES = {
         'NAME': 'nginx_consul',
         'USER': 'nginx',
         'PASSWORD': password,
-        # 'HOST': '1.116.65.90',
-        # 'PORT': 20036,
-        'HOST': '127.0.0.1',
-        'PORT': 3306
+        'HOST': '1.116.65.90',
+        'PORT': 20036,
+        # 'HOST': '127.0.0.1',
+        # 'PORT': 3306
     }
 }
 import pymysql
@@ -271,7 +271,7 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
-            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_CONNECT_TIMEOUT": 10,
             # "PASSWORD": "123",
         }
     },

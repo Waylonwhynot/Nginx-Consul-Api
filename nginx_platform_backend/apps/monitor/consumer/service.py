@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author   : Wang Meng
-@github   : https://github.com/tianpangji
-@software : PyCharm
-@file     : service.py
-@create   : 2020/7/29 20:24
-"""
 import json
 from datetime import datetime
 

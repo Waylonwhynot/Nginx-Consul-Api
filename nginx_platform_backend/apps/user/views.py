@@ -35,6 +35,13 @@ class PermissionView(CommonModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'method']
 
+class PermissionListView(CommonModelViewSet):
+    queryset = models.Permission.objects.all().order_by('-id')
+    serializer_class = PermissionSerializer
+    # pagination_class = BasicPagination
+    # filter_backends = [SearchFilter, OrderingFilter]
+    # search_fields = ['name', 'method']
+
 class PermissionsMethodsAPIView(APIView):
 
     """
