@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author   : Wang Meng
-@github   : https://github.com/tianpangji
-@software : PyCharm
-@file     : permissions.py
-@create   : 2021/2/14 17:11
-"""
 import json
 
 from user.models import Permission

@@ -1,14 +1,10 @@
 from rest_framework.mixins import ListModelMixin
 from utils.response import APIResponse
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView,GenericAPIView
 
 
-class MyListModelMixin(ListModelMixin):
-    """
-    List a queryset.
-    """
-
+class MyListAPIView(ListAPIView):
     def list(self, request, *args, **kwargs):
         res = super().list(request, *args, **kwargs)
         return APIResponse(data=res.data, code=20000, message="查询成功")

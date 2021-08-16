@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author   : Wang Meng
-@github   : https://github.com/tianpangji 
-@software : PyCharm 
-@file     : websocket.py
-@create   : 2020/7/29 20:25
-"""
 from urllib.parse import parse_qs
 
 from django.db import close_old_connections
