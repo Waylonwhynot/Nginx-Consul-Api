@@ -32,7 +32,6 @@ class RbacPermission(BasePermission):
         if not request.user.is_active:
             raise UserLock()
         request_url = request.path
-        print('请求的路径是------:  {}\n请求的方法是{}'.format(request_url,request.method))
         # 如果请求url在白名单，放行
         for safe_url in settings.WHITE_LIST:
             if re.match(settings.REGEX_URL.format(url=safe_url), request_url):
@@ -43,10 +42,8 @@ class RbacPermission(BasePermission):
             redis_storage_permissions(conn)
         if conn.exists('user_info_%s' % request.user.id):
             user_permissions = json.loads(conn.hget('user_info_%s' % request.user.id, 'permissions').decode())
-            print('当前用户拥有的权限是:', user_permissions)
             # 根据user_id获取当前用户权限，如果是admin 放行
             if 'admin' in user_permissions:
-                print('admin用户，大佬您请！')
                 return True
         else:
             user_permissions = []
@@ -57,19 +54,15 @@ class RbacPermission(BasePermission):
         request_method = request.method
         # Step 2 判断请求路径是否在权限控制中
         url_keys = conn.hkeys('user_permissions_manage')
-        # print('所有权限key值',url_keys)
         for url_key in url_keys: # 遍历权限列表返回匹配到的权限 key值 形式为"/api/system/org/"
             if re.match(settings.REGEX_URL.format(url=self.pro_uri(url_key.decode())), request_url):
                 redis_key = url_key.decode()
-                print('redis_key是:{}'.format(redis_key))
                 break
         else:
             return True # 匹配不到代表没有做权限限制，放行
         # Step 3 redis权限验证
         permissions = json.loads(conn.hget('user_permissions_manage', redis_key).decode())
         # 返回匹配到的权限key值 对应的values [{},{}...]
-        print('从user_permissions_manage中匹配到的权限列表:',permissions)
-        print('用户的权限是：',user_permissions)
         method_hit = True  # 同一接口配置不同权限验证
         for permission in permissions:
             if permission.get('method') == request_method:
@@ -80,5 +73,4 @@ class RbacPermission(BasePermission):
             if method_hit:
                 return False
             else:
-                print('finally')
                 return True
