@@ -84,17 +84,10 @@ TEMPLATES = [
 
 #############LDAP配置
 
-<<<<<<< HEAD
-import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
-
-# Baseline configuration.
-=======
 # import ldap
 # from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 #
 # # Baseline configuration.
->>>>>>> b0f40090ac2faf985c0585e319eae160c2bfd426
 # AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
 #
 # AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
