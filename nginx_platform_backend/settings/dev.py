@@ -109,6 +109,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+
 ############
 
 
@@ -262,8 +263,8 @@ JWT_AUTH = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        # "LOCATION": "redis://10.0.0.80:6379",
-        "LOCATION": "redis://127.0.0.0.1:6379",
+        "LOCATION": "redis://10.0.0.80:6379",
+        # "LOCATION": "redis://127.0.0.0.1:6379",
         # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -274,8 +275,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': "redis://127.0.0.1:6379/2",
-        # 'LOCATION': "redis://10.0.0.80:6379/2",
+        # 'LOCATION': "redis://127.0.0.1:6379/2",
+        'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -291,8 +292,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': "channels_redis.core.RedisChannelLayer",
         'CONFIG': {
-            'hosts': [f'redis://127.0.0.1:6379/4'],
-            # 'hosts': [f'redis://10.0.0.80:6379/4'],
+            # 'hosts': [f'redis://127.0.0.1:6379/4'],
+            'hosts': [f'redis://10.0.0.80:6379/4'],
             'symmetric_encryption_keys': [SECRET_KEY],
             'capacity': 1500,
             'expiry': 10
@@ -328,7 +329,7 @@ REGEX_URL = '^{url}$'  # 权限匹配时,严格正则url
 # PROJECT_START_TIME = psutil.Process().create_time()
 
 # prometheus 监控接口
-PROMETHEUS_URL = 'http://10.0.0.161:9090'
+PROMETHEUS_URL = 'http://192.168.11.251:9090'
 
 ### 用户自定义配置
 from .user_settings import *
