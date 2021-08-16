@@ -108,11 +108,6 @@ TEMPLATES = [
 #     'django_auth_ldap.backend.LDAPBackend',
 #     'django.contrib.auth.backends.ModelBackend',
 # )
-<<<<<<< HEAD
-# #
-
-=======
->>>>>>> b0f40090ac2faf985c0585e319eae160c2bfd426
 
 
 ############
