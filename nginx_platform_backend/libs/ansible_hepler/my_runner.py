@@ -28,7 +28,6 @@ def NginxAnsibleCmd(**kwargs):
     #     return {'status': 500, 'msg': "获取系统IP错误!! 详情:" + str(e)}
     try:
         current_process()._config = {'semprefix': '/mp'}
-        print(current_process()._config)
         res = [{'username': 'root', 'hostname': kwargs['ansibleIp']}]
         tqm = Runner(res)
         # 判断操作类型, sync or reload

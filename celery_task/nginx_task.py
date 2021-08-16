@@ -34,29 +34,21 @@ def nginxReloadAction(confId, opsId):
     try:
         confObj = models.NginxConf.objects.filter(pk=confId).first()
         opsObj = models.NginxInstanceOps.objects.filter(pk=opsId).first()
-        print("异步第一步:", confObj, opsObj)
         inData = {
             "action_2_ops": opsObj,
             "operator": opsObj.operator,
             "action":  "reload"
         }
-        print("构造数据:",inData)
         # 执行Reload操作
         reloadData = {
             "ansibleIp": confObj.type.managerIp,
             "type": 'reload',
             "reloadCmd": confObj.type.reloadCmd
         }
-        print("reload数据:", reloadData)
         ret = my_runner.NginxAnsibleCmd(**reloadData)
-        print("ansible执行结果:", ret)
         code, result = ret.get('data')
-        print('11111111111111111111111111', code, result)
         inData['msg'] = "run {} \r\n===>stdout<=== \r\n {}".format(result['cmd'], result['stdout'])
-        print('22222222222222222222222222', inData)
-        print('333333333333', 'code',  ret.get('status'), "FAILED" not in result['stdout'], "[emerg]" not in result['stdout'])
         if code == 0 and ret.get('status') == 20000 and "FAILED" not in result['stdout'] and "[emerg]" not in result['stdout']:
-            print('44444444444444444444444444')
             inData['action_status'] = "success"
             models.NginxAction.objects.create(**inData)
             # 更新ops 状态
@@ -75,12 +67,10 @@ def nginxReloadAction(confId, opsId):
             opsObj.save()
             return {"code": 500, "message": "执行Reload操作失败"}
     except Exception as e:
-        print(str(e))
         info_logger.error(str(e))
         # 更新ops表状态
         opsObj.ops_status = 'failed'
         opsObj.save()
-        print('555555555555555555555')
         return {"code": 500, "message": "异常信息：" + str(e)}
 
 
