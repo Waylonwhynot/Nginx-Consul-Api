@@ -2,14 +2,28 @@ from .serializer import OrgListSerializer,RoleSerializer,PermissionSerializer,Us
 from . import models
 from .pagination import BasicPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
-from libs.views import CommonModelViewSet,MyListModelMixin
+from libs.views import CommonModelViewSet,MyListAPIView
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
 from django.contrib.auth import authenticate
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 import json
 from utils.response import APIResponse
+from django_redis import get_redis_connection
+
+# 用户信息查询接口
+class UserView(CommonModelViewSet):
+    queryset = models.UserProfile.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
+
+# 角色接口
+class RoleView(CommonModelViewSet):
+    queryset = models.Role.objects.all()
+    serializer_class = RoleSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name',]
 
 # 组织架构接口
 class OrganizationView(CommonModelViewSet):
@@ -20,13 +34,6 @@ class OrganizationView(CommonModelViewSet):
     search_fields = ['name', 'type'] # 按search字段模糊搜索 SearchFilter
     # filter_fields = ['id','name', 'type'] # 按字段精确搜索 DjangoFilterBackend
 
-# 角色接口
-class RoleView(CommonModelViewSet):
-    queryset = models.Role.objects.all()
-    serializer_class = RoleSerializer
-    filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name',]
-
 # 权限接口
 class PermissionView(CommonModelViewSet):
     queryset = models.Permission.objects.all().order_by('-id')
@@ -35,12 +42,10 @@ class PermissionView(CommonModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'method']
 
-class PermissionListView(CommonModelViewSet):
+# # 查询所有权限（不加分页）
+class PermissionListView(MyListAPIView):
     queryset = models.Permission.objects.all().order_by('-id')
     serializer_class = PermissionSerializer
-    # pagination_class = BasicPagination
-    # filter_backends = [SearchFilter, OrderingFilter]
-    # search_fields = ['name', 'method']
 
 class PermissionsMethodsAPIView(APIView):
 
@@ -62,19 +67,6 @@ class PermissionsMethodsAPIView(APIView):
             assert isinstance(values, tuple) and len(values) == 2, 'choice数据错误, 应为二维元组'
         return self.choice
 
-# 查询所有权限（不加分页）
-class PermissionAllView(GenericViewSet,MyListModelMixin):
-    queryset = models.Permission.objects.all().order_by('-id')
-    serializer_class = PermissionSerializer
-
-# 用户信息查询接口
-class UserAllView(CommonModelViewSet):
-    queryset = models.UserProfile.objects.all()
-    serializer_class = UserSerializer
-    filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['username', 'mobile']  # 按search字段模糊搜索 SearchFilter
-
-from django_redis import get_redis_connection
 class UserAuthView(APIView):
     '''
     用户认证获取token
