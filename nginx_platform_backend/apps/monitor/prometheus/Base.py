@@ -35,11 +35,9 @@ class BaseMonitor:
         """
         base_url = self.usr + '/api/v1/query?query='
         inquire = base_url + query
-        print(inquire)
         response = requests.request('GET', inquire)
         if response.status_code == 200:
             result = response.json()['data']['result'][0]
-            # print("原始查询结果:", result)
             return result
         else:
             return None
@@ -122,6 +120,18 @@ class BaseMonitor:
 
     def get_file_usage(self, address, start_time, end_time, step=15):
         query = 'node_filefd_allocated{instance="' + address + '"}'
+        time_range = self.timeQuery(start_time, end_time, step)
+        result = self.getQueryRange(query, time_range)
+        return result
+
+    def get_net_in_usage(self, address, start_time, end_time, step=15):
+        query = 'rate(node_network_receive_bytes_total{instance="' + address + '",device="ens33"}[2m])*8'
+        time_range = self.timeQuery(start_time, end_time, step)
+        result = self.getQueryRange(query, time_range)
+        return result
+
+    def get_out_in_usage(self, address, start_time, end_time, step=15):
+        query = 'rate(node_network_transmit_bytes_total{instance="' + address + '",device="ens33"}[2m])*8'
         time_range = self.timeQuery(start_time, end_time, step)
         result = self.getQueryRange(query, time_range)
         return result
