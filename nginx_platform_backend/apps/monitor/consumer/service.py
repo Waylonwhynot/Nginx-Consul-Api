@@ -127,13 +127,17 @@ class ResourcesNginxConsumer(AsyncWebsocketConsumer):
             cpu_usage = self.get_cpu_usage()[up_server]
             mem_usage = self.get_mem_usage()[up_server]
             file_usage = self.get_file_usage()[up_server]
+            net_in_usage = self.get_net_in_usage()[up_server]
+            net_out_usage = self.get_net_out_usage()[up_server]
             service_info[up_server] = {
                 'uptime':uptime,
                 'os':os,
                 'cpu_cores':cpu_cores,
                 'cpu_usage':cpu_usage,
                 'mem_usage':mem_usage,
-                'file_usage':file_usage
+                'file_usage':file_usage,
+                'net_in_usage': net_in_usage,
+                'net_out_usage': net_out_usage
             }
         service_info['time'] = datetime.now().strftime('%H:%M:%S')
         # service_info['up_and_down'] = self.get_up_down_ip()
@@ -227,4 +231,34 @@ class ResourcesNginxConsumer(AsyncWebsocketConsumer):
             # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
             file_usage = str(float(result[0]['values'][-1][-1]))
             data[address] = file_usage
+        return data
+
+    @staticmethod
+    def get_net_in_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_net_in_usage(address=address, start_time=start_time, end_time=end_time)
+            # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
+            net_in_usage = str(round(float(result[0]['values'][-1][-1]), 0))
+            data[address] = net_in_usage
+        return data
+
+    @staticmethod
+    def get_net_out_usage():
+        base_monitor = BaseMonitor()
+        up_down_list = base_monitor.target()
+        up_list = up_down_list['up']
+        start_time = int(time.time() - 900)
+        end_time = int(time.time())
+        data = {}
+        for address in up_list:
+            result = base_monitor.get_out_in_usage(address=address, start_time=start_time, end_time=end_time)
+            # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
+            net_out_usage = str(round(float(result[0]['values'][-1][-1]), 0))
+            data[address] = net_out_usage
         return data
