@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
 import sys
@@ -33,9 +32,7 @@ def NginxAnsibleCmd(**kwargs):
         tqm = Runner(res)
         # 判断操作类型, sync or reload
         if kwargs['type'] == 'sync':
-            print("查看传输的数据:", kwargs)
             # {'ansibleIp': '10.0.0.80', 'type': 'sync', 'srcFile': '/tmp/luffy.ob1api.com.conf', 'destPath': '/etc/nginx/conf.d/', 'syncCmd': ''}
-            # command = "scp -P 22 {0} root@{1}:{2} && bash {3}".format(kwargs['srcFile'], "程序节点ip", kwargs['destPath'], kwargs['syncCmd'])
             import subprocess
             val = subprocess.check_call('scp -P 22 {0} root@{1}:{2}'.format(kwargs['srcFile'], kwargs['ansibleIp'], kwargs['destPath']), shell=True)
             if val is not 0:

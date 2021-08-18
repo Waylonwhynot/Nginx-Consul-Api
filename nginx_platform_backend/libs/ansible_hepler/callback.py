@@ -72,7 +72,6 @@ class ResultCallback(CallbackBase):
 class CallbackModule(CallbackBase):
     """
     官方回调方法
-
     Reference: https://github.com/ansible/ansible/blob/v2.0.0.2-1/lib/ansible/plugins/callback/default.py
     """
 
