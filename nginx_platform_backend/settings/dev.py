@@ -259,7 +259,6 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,  # 允许刷新Token
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',  # 定义Token携带头信息, Authorization: Bearer ...
 }
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
