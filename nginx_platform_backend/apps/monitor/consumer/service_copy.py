@@ -120,29 +120,13 @@ class ResourcesNginxConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_data(self):
         service_info = dict()
-        for up_server in self.get_up_down_ip()['up']:
-            uptime = self.get_up_time()[up_server]
-            os = self.get_os_release()[up_server]
-            cpu_cores = self.get_cpu_cores()[up_server]
-            cpu_usage = self.get_cpu_usage()[up_server]
-            mem_usage = self.get_mem_usage()[up_server]
-            file_usage = self.get_file_usage()[up_server]
-            service_info[up_server] = {
-                'uptime':uptime,
-                'os':os,
-                'cpu_cores':cpu_cores,
-                'cpu_usage':cpu_usage,
-                'mem_usage':mem_usage,
-                'file_usage':file_usage
-            }
-        service_info['time'] = datetime.now().strftime('%H:%M:%S')
-        # service_info['up_and_down'] = self.get_up_down_ip()
-        # service_info['uptime'] = self.get_up_time()
-        # service_info['os'] = self.get_os_release()
-        # service_info['cpu_cores'] = self.get_cpu_cores()
-        # service_info['cpu_usage'] = self.get_cpu_usage()
-        # service_info['mem_usage'] = self.get_mem_usage()
-        # service_info['file_usage'] = self.get_file_usage()
+        service_info['up_and_down'] = self.get_up_down_ip()
+        service_info['uptime'] = self.get_up_time()
+        service_info['os'] = self.get_os_release()
+        service_info['cpu_cores'] = self.get_cpu_cores()
+        service_info['cpu_usage'] = self.get_cpu_usage()
+        service_info['mem_usage'] = self.get_mem_usage()
+        service_info['file_usage'] = self.get_file_usage()
         return service_info
 
     @staticmethod

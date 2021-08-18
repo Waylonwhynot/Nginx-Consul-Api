@@ -14,6 +14,6 @@ application = ProtocolTypeRouter({
         URLRouter([
             re_path(r'^monitor/service', service.ResourcesConsumer),
             re_path(r'^monitor/nginx', service.ResourcesNginxConsumer),
-        ])
+        ]),
     )
 })

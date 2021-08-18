@@ -88,26 +88,26 @@ import ldap
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-AUTH_LDAP_BIND_PASSWORD = '123456'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-    ldap.SCOPE_SUBTREE,
-    '(uid=%(user)s)',
-)
-
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "cn",
-    "username": "sn"
-}
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
+# AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
+#
+# AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
+# AUTH_LDAP_BIND_PASSWORD = '123456'
+#
+# AUTH_LDAP_USER_SEARCH = LDAPSearch(
+#     'cn=Users,ou=Tech,dc=sholdboy,dc=com',
+#     ldap.SCOPE_SUBTREE,
+#     '(uid=%(user)s)',
+# )
+#
+# AUTH_LDAP_USER_ATTR_MAP = {
+#     "first_name": "cn",
+#     "username": "sn"
+# }
+#
+# AUTHENTICATION_BACKENDS = (
+#     'django_auth_ldap.backend.LDAPBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 
 
 ############
@@ -275,8 +275,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        # 'LOCATION': "redis://127.0.0.1:6379/2",
-        'LOCATION': "redis://10.0.0.80:6379/2",
+        'LOCATION': "redis://127.0.0.1:6379/2",
+        # 'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -292,8 +292,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': "channels_redis.core.RedisChannelLayer",
         'CONFIG': {
-            # 'hosts': [f'redis://127.0.0.1:6379/4'],
-            'hosts': [f'redis://10.0.0.80:6379/4'],
+            'hosts': [f'redis://127.0.0.1:6379/4'],
+            # 'hosts': [f'redis://10.0.0.80:6379/4'],
             'symmetric_encryption_keys': [SECRET_KEY],
             'capacity': 1500,
             'expiry': 10
