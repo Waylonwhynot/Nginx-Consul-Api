@@ -259,12 +259,11 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,  # 允许刷新Token
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',  # 定义Token携带头信息, Authorization: Bearer ...
 }
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.0.0.80:6379",
-        # "LOCATION": "redis://127.0.0.0.1:6379",
+        # "LOCATION": "redis://10.0.0.80:6379",
+        "LOCATION": "redis://127.0.0.0.1:6379",
         # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -275,8 +274,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        # 'LOCATION': "redis://127.0.0.1:6379/2",
-        'LOCATION': "redis://10.0.0.80:6379/2",
+        'LOCATION': "redis://127.0.0.1:6379/2",
+        # 'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
@@ -292,8 +291,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': "channels_redis.core.RedisChannelLayer",
         'CONFIG': {
-            # 'hosts': [f'redis://127.0.0.1:6379/4'],
-            'hosts': [f'redis://10.0.0.80:6379/4'],
+            'hosts': [f'redis://127.0.0.1:6379/4'],
+            # 'hosts': [f'redis://10.0.0.80:6379/4'],
             'symmetric_encryption_keys': [SECRET_KEY],
             'capacity': 1500,
             'expiry': 10
