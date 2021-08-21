@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
+from libs.pagination import BasicPagination
 from utils.views import CommonModelViewSet
 from . import models
 from .serializer import NginxConfSerializer, NginxModelSerializer, NginxOpsSerializer
@@ -14,6 +14,7 @@ class NginxConfigViewSet(CommonModelViewSet):
     serializer_class = NginxConfSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'appid']
+    pagination_class = BasicPagination
 
 
 class NginxModelViewSet(CommonModelViewSet):
@@ -21,6 +22,7 @@ class NginxModelViewSet(CommonModelViewSet):
     serializer_class = NginxModelSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'managerIp']
+    # pagination_class = BasicPagination
 
 
 class NginxOpsViewSet(CommonModelViewSet):
@@ -28,5 +30,6 @@ class NginxOpsViewSet(CommonModelViewSet):
     serializer_class = NginxOpsSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['operator', 'ops_2_conf__name']
+    # pagination_class = BasicPagination
 
 

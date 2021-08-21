@@ -88,26 +88,26 @@ import ldap
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Baseline configuration.
-# AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-#
-# AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-# AUTH_LDAP_BIND_PASSWORD = '123456'
-#
-# AUTH_LDAP_USER_SEARCH = LDAPSearch(
-#     'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-#     ldap.SCOPE_SUBTREE,
-#     '(uid=%(user)s)',
-# )
-#
-# AUTH_LDAP_USER_ATTR_MAP = {
-#     "first_name": "cn",
-#     "username": "sn"
-# }
-#
-# AUTHENTICATION_BACKENDS = (
-#     'django_auth_ldap.backend.LDAPBackend',
-#     'django.contrib.auth.backends.ModelBackend',
-# )
+AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
+
+AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
+AUTH_LDAP_BIND_PASSWORD = '123456'
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
+    ldap.SCOPE_SUBTREE,
+    '(uid=%(user)s)',
+)
+
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "cn",
+    "username": "sn"
+}
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 
 ############
@@ -231,9 +231,9 @@ LOGGING = {
 
 # 支持跨域请求
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:8080',
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'http://127.0.0.1:8080',
+# )
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -330,6 +330,7 @@ REGEX_URL = '^{url}$'  # 权限匹配时,严格正则url
 
 # prometheus 监控接口
 PROMETHEUS_URL = 'http://192.168.11.251:9090'
+# PROMETHEUS_URL = 'http://10.0.0.161:9090'
 
 ### 用户自定义配置
 from .user_settings import *
