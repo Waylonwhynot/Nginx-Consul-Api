@@ -54,7 +54,7 @@ def NginxAnsibleCmd(**kwargs):
         else:
             return {'status': 500, 'msg': "type非法参数!!"}
         ret = tqm.run(module_args=command)
-        print(ret)
+        # print(ret)
         return {"status": 20000, "data": ret}
     except Exception as e:
         error_logger.info(str(e))

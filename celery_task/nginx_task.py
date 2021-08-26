@@ -181,8 +181,8 @@ def nginxSyncAction(confId, opsId, srcFile):
 def nginxRemoveAction(confId, opsId):
     """
     nginx 下线
-    1） 判断程序节点 dns域名解析是否存在
-    2） 判断ES，3天日志是否有访问量
+    1） 待做: 判断程序节点 dns域名解析是否存在
+    2） 待做: 判断ES，3天日志是否有访问量
     3） sync操作
     4)  修改conf表，状态修改成closed
     :param confId:

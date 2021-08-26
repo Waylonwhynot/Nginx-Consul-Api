@@ -244,7 +244,7 @@ class ResourcesNginxConsumer(AsyncWebsocketConsumer):
         for address in up_list:
             result = base_monitor.get_net_in_usage(address=address, start_time=start_time, end_time=end_time)
             # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
-            net_in_usage = str(round(float(result[0]['values'][-1][-1]), 0))
+            net_in_usage = str(round(float(result[0]['values'][-1][-1])/1024, 0))
             data[address] = net_in_usage
         return data
 
@@ -259,6 +259,6 @@ class ResourcesNginxConsumer(AsyncWebsocketConsumer):
         for address in up_list:
             result = base_monitor.get_out_in_usage(address=address, start_time=start_time, end_time=end_time)
             # file_usage = str(round(float(result[0]['values'][-1][-1]), 2))
-            net_out_usage = str(round(float(result[0]['values'][-1][-1]), 0))
+            net_out_usage = str(round(float(result[0]['values'][-1][-1])/1024, 0))
             data[address] = net_out_usage
         return data
