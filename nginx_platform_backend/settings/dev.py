@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'channels',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'nginx_platform_backend.urls'
 
@@ -84,30 +86,30 @@ TEMPLATES = [
 
 #############LDAP配置
 
-import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
-
-# Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
-
-AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
-AUTH_LDAP_BIND_PASSWORD = '123456'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'cn=Users,ou=Tech,dc=sholdboy,dc=com',
-    ldap.SCOPE_SUBTREE,
-    '(uid=%(user)s)',
-)
-
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "cn",
-    "username": "sn"
-}
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
+# import ldap
+# from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+#
+# # Baseline configuration.
+# AUTH_LDAP_SERVER_URI = 'ldap://192.168.11.251:389'
+#
+# AUTH_LDAP_BIND_DN = 'cn=admin,dc=sholdboy,dc=com'
+# AUTH_LDAP_BIND_PASSWORD = '123456'
+#
+# AUTH_LDAP_USER_SEARCH = LDAPSearch(
+#     'cn=Users,ou=Tech,dc=sholdboy,dc=com',
+#     ldap.SCOPE_SUBTREE,
+#     '(uid=%(user)s)',
+# )
+#
+# AUTH_LDAP_USER_ATTR_MAP = {
+#     "first_name": "cn",
+#     "username": "sn"
+# }
+#
+# AUTHENTICATION_BACKENDS = (
+#     'django_auth_ldap.backend.LDAPBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 
 
 ############
@@ -262,8 +264,8 @@ JWT_AUTH = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        # "LOCATION": "redis://10.0.0.80:6379",
-        "LOCATION": "redis://127.0.0.0.1:6379",
+        "LOCATION": "redis://10.0.0.80:6379",
+        # "LOCATION": "redis://127.0.0.0.1:6379",
         # "LOCATION": "redis://1.116.65.90:20039",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -274,8 +276,8 @@ CACHES = {
     },
     'user_info': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': "redis://127.0.0.1:6379/2",
-        # 'LOCATION': "redis://10.0.0.80:6379/2",
+        # 'LOCATION': "redis://127.0.0.1:6379/2",
+        'LOCATION': "redis://10.0.0.80:6379/2",
 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
